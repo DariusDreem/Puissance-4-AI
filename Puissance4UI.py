@@ -6,7 +6,7 @@ class Puissance4UI:
 
     def __new__(cls, arg):
         if cls._instance is None:
-            cls._instance = super(Puissance4, cls).__new__(cls)
+            cls._instance = super(Puissance4UI, cls).__new__(cls)
         return cls._instance
 
     def __init__(self, root):
@@ -69,18 +69,7 @@ class Puissance4UI:
         self.display_current_player()
 
     def handle_click(self, event):
-        col = event.x // self.cell_size
-        print(f"Clicked on column {col}")
-        for row in range(self.rows - 1, -1, -1):
-            if self.board[row][col] == 0:
-                self.place_token(row, col, self.player)
-                display_row = self.rows - 1 - row  # Reverse the row for display
-                move = f"{self.player_color(self.player)} : {col},{display_row}"
-                self.moves_list.insert(tk.END, move)
-                break
-
-    def player_color(self, player):
-        return "Red" if player == 1 else "Yellow"
+        return event.x // self.cell_size
 
     def on_resize(self, event):
         width = self.root.winfo_width()
@@ -91,17 +80,3 @@ class Puissance4UI:
             self.moves_list.pack(side="left", fill="y", expand=False)
             self.canvas.pack(side="left", fill="both", expand=True)
 
-    def play(self, color, column):
-        if color.lower() == 'red':
-            player = 1
-        elif color.lower() == 'yellow':
-            player = 2
-        else:
-            raise ValueError("Invalid color. Choose 'red' or 'yellow'.")
-
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.geometry("1200x700")  # Set an initial size for the window
-    game = Puissance4UI(root)
-    root.mainloop()
