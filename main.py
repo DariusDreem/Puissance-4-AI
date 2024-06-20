@@ -1,21 +1,16 @@
-import game
 import tkinter as tk
-from Puissance4UI import Puissance4UI
+from Connect4GUI import Connect4GUI
+from Game import Game
 
 
 def main():
-    print("Welcome to Puissance-4!")
+    print("Bienvenue dans Puissance-4!")
 
     root = tk.Tk()
-    root.geometry("1200x700")  # Set an initial size for the window
-    gameui = Puissance4UI(root)
-    root.mainloop()
-
-    game.Game().play()
-
-    print("Game  ended.")
-
-
+    gui = Connect4GUI(root)
+    game = Game()  # Passez l'instance de Connect4GUI à Game
+    game.setGUI(gui)
+    game.play(root)
 
 
 if __name__ == "__main__":

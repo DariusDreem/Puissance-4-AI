@@ -1,12 +1,14 @@
 import tkinter as tk
 
+from Game import Game
 
-class Puissance4UI:
-    _instance = None  # Variable de classe pour stocker l'unique instance
+
+class Connect4GUI:
+    _instance = None
 
     def __new__(cls, arg):
         if cls._instance is None:
-            cls._instance = super(Puissance4UI, cls).__new__(cls)
+            cls._instance = super(Connect4GUI, cls).__new__(cls)
         return cls._instance
 
     def __init__(self, root):
@@ -69,7 +71,12 @@ class Puissance4UI:
         self.display_current_player()
 
     def handle_click(self, event):
+        print("Click : ", event.x // self.cell_size)
+        game_instance = Game()
+        game_instance.playTurn(event.x // self.cell_size)
+        # playTurn(event.x // self.cell_size)
         return event.x // self.cell_size
+
 
     def on_resize(self, event):
         width = self.root.winfo_width()
