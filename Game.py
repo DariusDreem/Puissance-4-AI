@@ -131,7 +131,7 @@ class Game:
         self.check_draw()
         
     def BotPlay(self):
-        move = Bot.Bot.Play()
+        move = Bot.Bot.Play(self)
         self.make_move(move)
        
         #self.print_board()
