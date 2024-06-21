@@ -97,14 +97,8 @@ class Game:
                     winner = self.board[row][col]
 
         if winner != 0:
-            self.IsFinished = True
             self.gui.display_winner(self.board[row][col])
             self.IsFinished = True
-            self.DisplayWinner(winner)
-            
-    def display_winner(self, player):
-        player_color = "rouge" if self.player == 1 else "jaune"
-        self.current_player_label.config(text=f"Le gagant est {player_color}")
             
     def check_draw(self):
         if all(cell != 0 for row in self.board for cell in row):
