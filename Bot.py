@@ -11,3 +11,5 @@ class Bot:
         move = random.randint(0, 6)
         print("Bot played : ", move)
         return move
+    
+    
