@@ -44,9 +44,13 @@ class Game:
 
     def make_move(self, column):
         i = 0
+        if self.IsFinished:
+            return
+
         for row in reversed(self.board):
             if row[column] == 0:
-                print("ligne : ", i, " colonne : ", column, " joueur : ", self.player_turn)
+                print("ligne : ", i, " colonne : ", column, " joueur : ",
+                      self.player_turn)
 
                 row[column] = self.player_turn
 
@@ -55,6 +59,10 @@ class Game:
                 self.player_turn = 2 if self.player_turn == 1 else 1
                 break
             i += 1
+        print("Player turn : ", self.gameType)
+        if GameType.GameType.CVC == self.gameType:
+            print("Bot turn !!!")
+            self.gui.root.after(1000, self.playTurn)
 
     # for row in reversed(self.board):
     #         if row[column] == 0:
@@ -65,6 +73,8 @@ class Game:
     #             return
 
     def check_win(self):
+        winner = 0
+
         # Vérifier les lignes horizontales
         for row in self.board:
             for i in range(len(row) - 3):
@@ -85,7 +95,7 @@ class Game:
             for col in range(len(self.board[0]) - 3):
                 if self.board[row][col] != 0 and self.board[row][col] == \
                         self.board[row + 1][col + 1] == self.board[row + 2][
-                    col + 2] == self.board[row + 3][col + 3]:
+                        col + 2] == self.board[row + 3][col + 3]:
                     winner = self.board[row][col]
 
         # Vérifier les diagonales montantes
@@ -93,7 +103,7 @@ class Game:
             for col in range(len(self.board[0]) - 3):
                 if self.board[row][col] != 0 and self.board[row][col] == \
                         self.board[row - 1][col + 1] == self.board[row - 2][
-                    col + 2] == self.board[row - 3][col + 3]:
+                        col + 2] == self.board[row - 3][col + 3]:
                     winner = self.board[row][col]
 
         if winner != 0:
@@ -105,12 +115,10 @@ class Game:
             print("It's a draw!")
             self.IsFinished = True
     
-    def playTurn(self, column):
-        print(self.gameType)
-        print(GameType.GameType.PVP)
+    def playTurn(self, column = 0):
         if GameType.GameType.PVP is self.gameType:
-            print("caca")
             self.PlayerPlay(column)
+
         elif GameType.GameType.PVC == self.gameType:
 
             if (self.player_turn == 1):
