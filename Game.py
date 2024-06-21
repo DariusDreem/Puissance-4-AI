@@ -1,3 +1,6 @@
+import GameType
+import Bot
+
 class Game:
     IsFinished = False
     _instance = None  # Variable de classe pour stocker l'unique instance
@@ -89,6 +92,17 @@ class Game:
         return 0
 
     def playTurn(self, column):
+        if (GameType.GameType.PVP == self.gui.GameType):
+            self.PlayerPlay(column)
+        elif (GameType.GameType.PVC == self.gui.GameType):
+            if (self.player_turn == 1):
+                self.PlayerPlay(column)
+            else:
+                Bot.Play()
+        elif (GameType.GameType.CVC == self.gui.GameType):
+            Bot.Play()
+        
+    def PlayerPlay(self, column):
         if not self.is_valid_move(column):
             print("Invalid move. Try again.")
             return

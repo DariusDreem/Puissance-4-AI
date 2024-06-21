@@ -73,6 +73,7 @@ class Connect4GUI:
     def handle_click(self, event):
         print("Click : ", event.x // self.cell_size)
         game_instance = Game()
+        
         game_instance.playTurn(event.x // self.cell_size)
         # playTurn(event.x // self.cell_size)
         return event.x // self.cell_size
