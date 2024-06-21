@@ -8,12 +8,6 @@ from Game import Game
 def main():
     print("Bienvenue dans Puissance-4!")
 
-    # root = tk.Tk()
-    # gui = Connect4GUI(root)
-    # game = Game()  # Passez l'instance de Connect4GUI à Game
-    # game.setGUI(gui)
-    # game.play(root)
-
     Menu.Menu()
 
 if __name__ == "__main__":

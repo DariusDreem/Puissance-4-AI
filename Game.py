@@ -70,7 +70,7 @@ class Game:
             for i in range(len(row) - 3):
                 if row[i] != 0 and row[i] == row[i + 1] == row[i + 2] == row[
                     i + 3]:
-                    return row[i]
+                    winner = row[i]
 
         # Vérifier les colonnes verticales
         for col in range(len(self.board[0])):
@@ -78,7 +78,7 @@ class Game:
                 if self.board[row][col] != 0 and self.board[row][col] == \
                         self.board[row + 1][col] == self.board[row + 2][col] == \
                         self.board[row + 3][col]:
-                    return self.board[row][col]
+                    winner = self.board[row][col]
 
         # Vérifier les diagonales descendantes
         for row in range(len(self.board) - 3):
@@ -86,7 +86,7 @@ class Game:
                 if self.board[row][col] != 0 and self.board[row][col] == \
                         self.board[row + 1][col + 1] == self.board[row + 2][
                     col + 2] == self.board[row + 3][col + 3]:
-                    return self.board[row][col]
+                    winner = self.board[row][col]
 
         # Vérifier les diagonales montantes
         for row in range(3, len(self.board)):
@@ -94,10 +94,23 @@ class Game:
                 if self.board[row][col] != 0 and self.board[row][col] == \
                         self.board[row - 1][col + 1] == self.board[row - 2][
                     col + 2] == self.board[row - 3][col + 3]:
-                    return self.board[row][col]
+                    winner = self.board[row][col]
 
-        return 0
-
+        if winner != 0:
+            self.IsFinished = True
+            self.gui.display_winner(self.board[row][col])
+            self.IsFinished = True
+            self.DisplayWinner(winner)
+            
+    def display_winner(self, player):
+        player_color = "rouge" if self.player == 1 else "jaune"
+        self.current_player_label.config(text=f"Le gagant est {player_color}")
+            
+    def check_draw(self):
+        if all(cell != 0 for row in self.board for cell in row):
+            print("It's a draw!")
+            self.IsFinished = True
+    
     def playTurn(self, column):
         print(self.gameType)
         print(GameType.GameType.PVP)
@@ -109,27 +122,27 @@ class Game:
             if (self.player_turn == 1):
                 self.PlayerPlay(column)
             else:
-                Bot.Bot.Play()
+                self.BotPlay()
         elif GameType.GameType.CVC == self.gameType:
-            column = Bot.Bot.Play()
+            self.BotPlay()
+        self.check_win()
+        self.check_draw()
         
+    def BotPlay(self):
+        move = Bot.Bot.Play()
+        self.make_move(move)
+       
+        #self.print_board()
+    
+    
     def PlayerPlay(self, column):
         if not self.is_valid_move(column):
             print("Invalid move. Try again.")
             return
         self.make_move(column)
-        winner = self.check_win()
-        self.print_board()
-        if winner:
-            self.print_board()
-            print(f"Player {winner} wins!")
-            self.IsFinished = True
+        #self.print_board()
 
-            return
-        if all(cell != 0 for row in self.board for cell in row):
-            self.print_board()
-            print("It's a draw!")
-            return
+        
 
     def play(self, root):
         self.IsFinished = False  # Initialiser la variable avec la casse correcte
