@@ -2,6 +2,7 @@ import GameType
 import Bot
 
 class Game:
+    gameType = GameType.GameType.PVP
     IsFinished = False
     _instance = None  # Variable de classe pour stocker l'unique instance
 
@@ -10,18 +11,24 @@ class Game:
             cls._instance = super(Game, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, gui=None):
+    def __init__(self, gui=None, gameType=None):
         if gui is not None:
             self.gui = gui
+        if gameType is not None:
+            self.GameType = GameType.GameType(gameType)
 
         if not hasattr(self,
                        'initialized'):  # Vérifiez si l'instance a déjà été initialisée
             self.board = [[0 for _ in range(7)] for _ in range(6)]
             self.player_turn = 1
             self.initialized = True  # Marquez l'instance comme initialisée
+            self.gameType = GameType.GameType.PVP
 
     def setGUI(self, gui):
         self.gui = gui  # Instance de Connect4GUI
+
+    def setGameType(self, gameType):
+        self.gameType = gameType  # Instance de Connect4GUI
 
     def print_board(self):
         print("\n")
@@ -92,15 +99,19 @@ class Game:
         return 0
 
     def playTurn(self, column):
-        if (GameType.GameType.PVP == self.gui.GameType):
+        print(self.gameType)
+        print(GameType.GameType.PVP)
+        if GameType.GameType.PVP is self.gameType:
+            print("caca")
             self.PlayerPlay(column)
-        elif (GameType.GameType.PVC == self.gui.GameType):
+        elif GameType.GameType.PVC == self.gameType:
+
             if (self.player_turn == 1):
                 self.PlayerPlay(column)
             else:
-                Bot.Play()
-        elif (GameType.GameType.CVC == self.gui.GameType):
-            Bot.Play()
+                Bot.Bot.Play()
+        elif GameType.GameType.CVC == self.gameType:
+            column = Bot.Bot.Play()
         
     def PlayerPlay(self, column):
         if not self.is_valid_move(column):
@@ -112,7 +123,8 @@ class Game:
         if winner:
             self.print_board()
             print(f"Player {winner} wins!")
-            self.IsFinished = True  # Mettre à jour la variable avec la casse correcte
+            self.IsFinished = True
+
             return
         if all(cell != 0 for row in self.board for cell in row):
             self.print_board()

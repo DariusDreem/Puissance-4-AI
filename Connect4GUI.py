@@ -58,8 +58,8 @@ class Connect4GUI:
                                             fill="yellow")
 
     def display_current_player(self):
-        player_color = "Red" if self.player == 1 else "Yellow"
-        self.current_player_label.config(text=f"Player's turn: {player_color}")
+        player_color = "rouge" if self.player == 2 else "jaune"
+        self.current_player_label.config(text=f"Au tour de : {player_color}")
 
     def place_token(self, row, col, player):
         self.board[row][col] = player
@@ -88,3 +88,11 @@ class Connect4GUI:
             self.moves_list.pack(side="left", fill="y", expand=False)
             self.canvas.pack(side="left", fill="both", expand=True)
 
+    def displaywinner(self, event):
+        width = self.root.winfo_width()
+        if width < self.width + self.moves_list.winfo_reqwidth():
+            self.moves_list.pack_forget()
+            self.canvas.pack(side="left", fill="both", expand=True)
+        else:
+            self.moves_list.pack(side="left", fill="y", expand=False)
+            self.canvas.pack(side="left", fill="both", expand=True)
