@@ -109,7 +109,7 @@ class Bot:
         for row in range(3):
             for col in range(7):
                 window = [board[row+i][col] for i in range(4)]
-                score += Bot.evaluate_window(self, window, player)
+                score += Bot.evaluate_window(window, player)
 
         # Évaluer les diagonales descendantes
         for row in range(3):
@@ -125,8 +125,8 @@ class Bot:
 
         return score
 
-    # @staticmethod
-    def evaluate_window(self, window, player):
+    @staticmethod
+    def evaluate_window(window, player):
         score = 0
         opponent = 1 if player == 2 else 2
         if window.count(player) == 4:
