@@ -1,20 +1,26 @@
 import GameType
 import Bot
 
+
 class Game:
     gameType = GameType.GameType.PVP
     IsFinished = False
     _instance = None  # Variable de classe pour stocker l'unique instance
 
-    def __new__(cls):
+    # gui = None
+
+    def __new__(cls, args=None):
         if cls._instance is None:
             cls._instance = super(Game, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, gui=None, gameType=None):
-        if gui is not None:
-            self.gui = gui
+    def __init__(self, gameType=None):
+        #gui=None, this is in args
+        # if gui is not None:
+        #     print("Set GUI")
+        #     self.gui = gui
         if gameType is not None:
+            print("Set Game Type : ", gameType)
             self.GameType = GameType.GameType(gameType)
 
         if not hasattr(self,
@@ -24,11 +30,14 @@ class Game:
             self.initialized = True  # Marquez l'instance comme initialisée
             self.gameType = GameType.GameType.PVP
 
-    def setGUI(self, gui):
-        self.gui = gui  # Instance de Connect4GUI
+    # def setGUI(self, gui):
+    #     print("Set GUI")
+    #     print(gui)
+    #     self.gui = gui  # Instance de Connect4GUI
 
     def setGameType(self, gameType):
-        self.gameType = gameType  # Instance de Connect4GUI
+        print("Set Game Type : ", gameType)
+        self.gameType = gameType
 
     def print_board(self):
         print("\n")
@@ -39,8 +48,16 @@ class Game:
     def is_valid_move(self, column):
         if column < 0 or column > 6:
             return False
-        if (self.board[0][column] == 0):
+        if self.board[0][column] == 0:
             return True
+
+    def finishLoadGui(self):
+        print("Finish Load Gui")
+        print("Game Type : ", self.gameType)
+        print("Player turn : ", GameType.GameType.CVC)
+        if GameType.GameType.CVC == self.gameType:
+            # print(gui)
+            self.playTurn(-1, False)
 
     def make_move(self, column):
         i = 0
@@ -54,23 +71,18 @@ class Game:
 
                 row[column] = self.player_turn
 
-                self.gui.place_token(5 - i, column,
-                                     self.player_turn)
+                # self.gui.place_token(5 - i, column,self.player_turn)
+                # Place a Token in the board
+
                 self.player_turn = 2 if self.player_turn == 1 else 1
                 break
             i += 1
         print("Player turn : ", self.gameType)
         if GameType.GameType.CVC == self.gameType:
             print("Bot turn !!!")
-            self.gui.root.after(1000, self.playTurn)
-
-    # for row in reversed(self.board):
-    #         if row[column] == 0:
-    #             row[column] = self.player_turn
-    #             self.gui.update_display(
-    #                 self.board)  # Appel à la méthode de Connect4GUI
-    #             self.player_turn = 2 if self.player_turn == 1 else 1
-    #             return
+            # self.gui.root.after(1000, self.playTurn, -1,
+            #                     False)  # Collum redifined where the bot played
+            #Loop for the bot to play
 
     def check_win(self):
         winner = 0
@@ -95,7 +107,7 @@ class Game:
             for col in range(len(self.board[0]) - 3):
                 if self.board[row][col] != 0 and self.board[row][col] == \
                         self.board[row + 1][col + 1] == self.board[row + 2][
-                        col + 2] == self.board[row + 3][col + 3]:
+                    col + 2] == self.board[row + 3][col + 3]:
                     winner = self.board[row][col]
 
         # Vérifier les diagonales montantes
@@ -103,24 +115,26 @@ class Game:
             for col in range(len(self.board[0]) - 3):
                 if self.board[row][col] != 0 and self.board[row][col] == \
                         self.board[row - 1][col + 1] == self.board[row - 2][
-                        col + 2] == self.board[row - 3][col + 3]:
+                    col + 2] == self.board[row - 3][col + 3]:
                     winner = self.board[row][col]
 
         if winner != 0:
-            self.gui.display_winner(self.board[row][col])
+            # self.gui.display_winner(self.board[row][col])
             self.IsFinished = True
-            
+
     def check_draw(self):
         if all(cell != 0 for row in self.board for cell in row):
             print("It's a draw!")
             self.IsFinished = True
-    
-    def playTurn(self, column = 0):
+
+    def playTurn(self, column=0, playerClick=True):
         if GameType.GameType.PVP is self.gameType:
             self.PlayerPlay(column)
 
-        elif GameType.GameType.PVC == self.gameType:
+        if GameType.GameType.CVC is self.gameType and playerClick is True:
+            return
 
+        elif GameType.GameType.PVC == self.gameType:
             if (self.player_turn == 1):
                 self.PlayerPlay(column)
             else:
@@ -129,22 +143,19 @@ class Game:
             self.BotPlay()
         self.check_win()
         self.check_draw()
-        
+
     def BotPlay(self):
         move = Bot.Bot.Play(self)
         self.make_move(move)
-       
+
         #self.print_board()
-    
-    
+
     def PlayerPlay(self, column):
         if not self.is_valid_move(column):
             print("Invalid move. Try again.")
             return
         self.make_move(column)
         #self.print_board()
-
-        
 
     def play(self, root):
         self.IsFinished = False  # Initialiser la variable avec la casse correcte

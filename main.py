@@ -1,14 +1,9 @@
-import tkinter as tk
-
-import Menu
-from Connect4GUI import Connect4GUI
-from Game import Game
-
+# main.py
+from MyTk import MyTk
 
 def main():
-    print("Bienvenue dans Puissance-4!")
-
-    Menu.Menu()
+    app = MyTk()
+    app.mainloop()
 
 if __name__ == "__main__":
     main()
