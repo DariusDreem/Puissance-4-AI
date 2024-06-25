@@ -36,11 +36,13 @@ class Game:
             print(" ".join(str(cell) for cell in row))
         print("\n")
 
-    def is_valid_move(self, column):
-        if column < 0 or column > 6:
-            return False
-        if (self.board[0][column] == 0):
-            return True
+    def is_valid_move(self):
+        valid_moves = []
+        for column in range(7):
+            if self.board[0][column] == 0:
+                valid_moves.append(column)
+        return valid_moves
+
 
     def make_move(self, column):
         i = 0
@@ -63,14 +65,6 @@ class Game:
         if GameType.GameType.CVC == self.gameType:
             print("Bot turn !!!")
             self.gui.root.after(1000, self.playTurn)
-
-    # for row in reversed(self.board):
-    #         if row[column] == 0:
-    #             row[column] = self.player_turn
-    #             self.gui.update_display(
-    #                 self.board)  # Appel à la méthode de Connect4GUI
-    #             self.player_turn = 2 if self.player_turn == 1 else 1
-    #             return
 
     def check_win(self):
         winner = 0
@@ -131,14 +125,13 @@ class Game:
         self.check_draw()
         
     def BotPlay(self):
-        move = Bot.Bot.Play(self)
+        bot = Bot.Bot("./Data/Test.csv")
+        move = bot.Play(self.board, self.player_turn, self.is_valid_move())
         self.make_move(move)
-       
-        #self.print_board()
     
     
     def PlayerPlay(self, column):
-        if not self.is_valid_move(column):
+        if column not in self.is_valid_move():
             print("Invalid move. Try again.")
             return
         self.make_move(column)

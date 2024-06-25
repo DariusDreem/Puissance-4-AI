@@ -7,7 +7,7 @@ from Game import Game
 
 def main():
     print("Bienvenue dans Puissance-4!")
-    #Menu.Menu()
+    Menu.Menu()
     
 
 if __name__ == "__main__":
