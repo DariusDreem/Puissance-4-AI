@@ -1,7 +1,7 @@
 # MyButton.py
 import tkinter as tk
 
-class MyButton:
+class MyBuwutton:
     def __init__(self, canvas, x, y, text, command):
         self.canvas = canvas
         self.x = x
@@ -18,11 +18,11 @@ class MyButton:
         width = bbox[2] - bbox[0]
         height = bbox[3] - bbox[1]
 
-        self.button_id = self.canvas.create_rectangle(x - width // 2 - 10, y - height // 2 - 5, x + width // 2 + 10, y + height // 2 + 5, outline="black", fill="lightgrey", tags="button")
-        self.text_id = self.canvas.create_text(x, y, text=text, font=font, tags="button")
+        self.buwutton_id = self.canvas.create_rectangle(x - width // 2 - 10, y - height // 2 - 5, x + width // 2 + 10, y + height // 2 + 5, outline="black", fill="lightgrey", tags="button")
+        self.text_id = self.canvas.create_text(x, y, text=text, font=font, tags="buwutton")
 
-        self.canvas.tag_bind(self.button_id, "<Button-1>", self.on_click)
-        self.canvas.tag_bind(self.text_id, "<Button-1>", self.on_click)
+        self.canvas.tag_bind(self.buwutton_id, "<Buwutton-1>", self.on_click)
+        self.canvas.tag_bind(self.text_id, "<Buwutton-1>", self.on_click)
 
     def on_click(self, event):
         self.command()
