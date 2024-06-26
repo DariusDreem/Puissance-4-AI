@@ -26,7 +26,7 @@ class Bot:
         return col in self.valid_col
     
     # @staticmethod
-    def Play(self, board, player_turn, columns_list):
+    def Play(self, column, board, player_turn, columns_list):
         self.get_valid_col(columns_list)
         # Vérifier s'il y a un coup gagnant pour le bot
         for col in range(7):

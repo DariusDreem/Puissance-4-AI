@@ -1,11 +1,14 @@
 import GameType
-import Bot
+import Bot as Bot
+import Player as Player
 
 class Game:
     gameType = GameType.GameType.PVP
     IsFinished = False
     _instance = None  # Variable de classe pour stocker l'unique instance
-
+    player1 = Player.Player()
+    player2 = Player.Player()
+    
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(Game, cls).__new__(cls)
@@ -29,6 +32,11 @@ class Game:
 
     def setGameType(self, gameType):
         self.gameType = gameType  # Instance de Connect4GUI
+        if self.gameType == GameType.GameType.PVC:
+            self.player2 = Bot.Bot("./Data/Test.csv")
+        elif self.gameType == GameType.GameType.CVC:
+            self.player1 = Bot.Bot("./Data/Test.csv")
+            self.player2 = Bot.Bot("./Data/Test.csv")
 
     def print_board(self):
         print("\n")
@@ -110,24 +118,31 @@ class Game:
             self.IsFinished = True
     
     def playTurn(self, column = 0):
-        if GameType.GameType.PVP is self.gameType:
-            self.PlayerPlay(column)
+        # if GameType.GameType.PVP is self.gameType:
+        #     self.PlayerPlay(column)
 
-        elif GameType.GameType.PVC == self.gameType:
+        # elif GameType.GameType.PVC == self.gameType:
 
-            if (self.player_turn == 1):
-                self.PlayerPlay(column)
-            else:
-                self.BotPlay()
-        elif GameType.GameType.CVC == self.gameType:
-            self.BotPlay()
+        #     if (self.player_turn == 1):
+        #         self.PlayerPlay(column)
+        #     else:
+        #         self.BotPlay()
+        # elif GameType.GameType.CVC == self.gameType:
+        #     self.BotPlay()
+        
+            
+            
+        column = self.player1.Play(column,self.board, self.player_turn, self.is_valid_move()) if self.player_turn == 1 else self.player2.Play(column,self.board, self.player_turn, self.is_valid_move())
+        self.make_move(column)
+
+        
         self.check_win()
         self.check_draw()
         
     def BotPlay(self):
         bot = Bot.Bot("./Data/Test.csv")
-        move = bot.Play(self.board, self.player_turn, self.is_valid_move())
-        self.make_move(move)
+        column = bot.Play(self.board, self.player_turn, self.is_valid_move())
+        self.make_move(column)
     
     
     def PlayerPlay(self, column):
