@@ -1,6 +1,6 @@
 # MyCanva.py
 import tkinter as tk
-from MyButton import MyButton
+from MyBuwutton import MyBuwutton
 
 class MyCanvas(tk.Canvas):
     def __init__(self, master):
@@ -39,7 +39,7 @@ class MyCanvas(tk.Canvas):
         self.moves_list.pack(side="right", fill="y")
 
         self.display_current_player()
-        self.canvas.bind("<Button-1>", self.handle_click)
+        self.canvas.bind("<Buwutton-1>", self.handle_click)
         self.root.bind("<Configure>", self.on_resize)
 
     def draw_board(self):
@@ -65,7 +65,7 @@ class MyCanvas(tk.Canvas):
 
 
 
-    # =========================== BUTTON ===========================
+    # =========================== BUWUTTON ===========================
 
     def clear(self):
         self.delete("all")
@@ -75,9 +75,9 @@ class MyCanvas(tk.Canvas):
         self.current_screen = "menu"
         self.create_text(200, 100, text="Menu", font=("Arial", 24))
 
-        MyButton(self, 200, 150, "Joueur contre Joueur", self.start_game_pvp)
-        MyButton(self, 200, 190, "Joueur contre Ordinateur", self.start_game_pve)
-        MyButton(self, 200, 230, "Ordinateur contre Ordinateur", self.start_game_ia)
+        MyBuwutton(self, 200, 150, "Joueur contre Joueur", self.start_game_pvp)
+        MyBuwutton(self, 200, 190, "Joueur contre Ordinateur", self.start_game_pve)
+        MyBuwutton(self, 200, 230, "Ordinateur contre Ordinateur", self.start_game_ia)
 
     def start_game_pvp(self, event=None):
         self.clear()
