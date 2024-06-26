@@ -1,14 +1,14 @@
 import GameType
-import Bot
-
+import Bot as Bot
+import Player as Player
 
 class Game:
     gameType = GameType.GameType.PVP
     IsFinished = False
     _instance = None  # Variable de classe pour stocker l'unique instance
-
-    # gui = None
-
+    player1 = Player.Player()
+    player2 = Player.Player()
+    
     def __new__(cls, args=None):
         if cls._instance is None:
             cls._instance = super(Game, cls).__new__(cls)
@@ -36,8 +36,12 @@ class Game:
     #     self.gui = gui  # Instance de Connect4GUI
 
     def setGameType(self, gameType):
-        print("Set Game Type : ", gameType)
-        self.gameType = gameType
+        self.gameType = gameType  # Instance de Connect4GUI
+        if self.gameType == GameType.GameType.PVC:
+            self.player2 = Bot.Bot("./Data/Test.csv")
+        elif self.gameType == GameType.GameType.CVC:
+            self.player1 = Bot.Bot("./Data/Test.csv")
+            self.player2 = Bot.Bot("./Data/Test.csv")
 
     def print_board(self):
         print("\n")
@@ -45,11 +49,13 @@ class Game:
             print(" ".join(str(cell) for cell in row))
         print("\n")
 
-    def is_valid_move(self, column):
-        if column < 0 or column > 6:
-            return False
-        if self.board[0][column] == 0:
-            return True
+    def is_valid_move(self):
+        valid_moves = []
+        for column in range(7):
+            if self.board[0][column] == 0:
+                valid_moves.append(column)
+        return valid_moves
+
 
     def finishLoadGui(self):
         print("Finish Load Gui")
@@ -128,30 +134,35 @@ class Game:
             self.IsFinished = True
 
     def playTurn(self, column=0, playerClick=True):
-        if GameType.GameType.PVP is self.gameType:
-            self.PlayerPlay(column)
-
         if GameType.GameType.CVC is self.gameType and playerClick is True:
             return
 
-        elif GameType.GameType.PVC == self.gameType:
-            if (self.player_turn == 1):
-                self.PlayerPlay(column)
-            else:
-                self.BotPlay()
-        elif GameType.GameType.CVC == self.gameType:
-            self.BotPlay()
+        # elif GameType.GameType.PVC == self.gameType:
+
+        #     if (self.player_turn == 1):
+        #         self.PlayerPlay(column)
+        #     else:
+        #         self.BotPlay()
+        # elif GameType.GameType.CVC == self.gameType:
+        #     self.BotPlay()
+        
+            
+            
+        column = self.player1.Play(column,self.board, self.player_turn, self.is_valid_move()) if self.player_turn == 1 else self.player2.Play(column,self.board, self.player_turn, self.is_valid_move())
+        self.make_move(column)
+
+        
         self.check_win()
         self.check_draw()
 
     def BotPlay(self):
-        move = Bot.Bot.Play(self)
-        self.make_move(move)
-
-        #self.print_board()
-
+        bot = Bot.Bot("./Data/Test.csv")
+        column = bot.Play(self.board, self.player_turn, self.is_valid_move())
+        self.make_move(column)
+    
+    
     def PlayerPlay(self, column):
-        if not self.is_valid_move(column):
+        if column not in self.is_valid_move():
             print("Invalid move. Try again.")
             return
         self.make_move(column)
