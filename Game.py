@@ -8,6 +8,7 @@ class Game:
     _instance = None  # Variable de classe pour stocker l'unique instance
     player1 = Player.Player()
     player2 = Player.Player()
+    board = [[0 for _ in range(7)] for _ in range(6)]
     
     def __new__(cls, args=None):
         if cls._instance is None:
@@ -25,7 +26,7 @@ class Game:
 
         if not hasattr(self,
                        'initialized'):  # Vérifiez si l'instance a déjà été initialisée
-            self.board = [[0 for _ in range(7)] for _ in range(6)]
+            # self.board = [[0 for _ in range(7)] for _ in range(6)]
             self.player_turn = 1
             self.initialized = True  # Marquez l'instance comme initialisée
             self.gameType = GameType.GameType.PVP
