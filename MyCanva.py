@@ -1,5 +1,7 @@
 # MyCanva.py
 import tkinter as tk
+
+import GameType
 from MyButton import MyButton
 
 
@@ -28,6 +30,7 @@ class MyCanvas(tk.Canvas):
             [0, 0, 0, 0, 2, 1, 2]
         ]  # REALLY BOARD HERE
         self.show_menu()
+        print("MyCanvas init : ", self.master.game)
 
     def draw_board(self):
         self.delete("all")
@@ -98,6 +101,8 @@ class MyCanvas(tk.Canvas):
 
     def start_game_pvp(self, event=None):
         self.clear()
+        self.master.game.gameType = GameType.GameType.PVP
+        print("Game Type : ", self.master.game.gameType)
         self.setup_game()
         self.master.bind('m', self.back_to_menu)
 
