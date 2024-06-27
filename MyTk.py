@@ -6,12 +6,12 @@ from MyCanva import MyCanvas
 
 
 class MyTk(tk.Tk):
+    bite = 31
+
     def __init__(self):
         super().__init__()
-        self.title("Hello World App")
-        self.geometry("400x300")
-
+        self.title("Menu")
+        self.game = Game()
         self.canvas = MyCanvas(self)
         self.canvas.pack(fill="both", expand=True)
 
-        game = Game()

@@ -3,7 +3,7 @@ import Bot as Bot
 import Player as Player
 
 class Game:
-    gameType = GameType.GameType.PVP
+    gameType = GameType.GameType.PVC
     IsFinished = False
     _instance = None  # Variable de classe pour stocker l'unique instance
     player1 = Player.Player()
