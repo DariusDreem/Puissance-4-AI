@@ -16,19 +16,20 @@ class MyCanvas(tk.Canvas):
         self.rows = 6
         self.cols = 7
         self.cell_size = 100
+        self.board = self.master.game.board
         self.width = self.cols * self.cell_size
         self.height = (self.rows + 1) * self.cell_size
         self.canvas = self
         self.board = [[0] * self.cols for _ in range(self.rows)]
         self.player = 1
-        self.board = [
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 2, 1, 2]
-        ]  # REALLY BOARD HERE
+    # self.board = [
+        #     [0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 2, 1, 2]
+        # ]  # REALLY BOARD HERE
         self.show_menu()
         print("MyCanvas init : ", self.master.game)
 
@@ -51,15 +52,17 @@ class MyCanvas(tk.Canvas):
         self.canvas.bind("<Button-1>", self.handle_click)
 
     def update_draw_board(self):
+        # self.board = [
+        #     [0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 0, 0, 0],
+        #     [0, 0, 0, 0, 1, 0, 0],
+        #     [0, 0, 0, 0, 1, 0, 0],
+        #     [0, 0, 0, 0, 1, 0, 0],
+        #     [0, 0, 0, 0, 2, 1, 2]
+        # ] # REALLY NEW BOARD HERE
+        self.board = self.master.game.board
         self.draw_board()
-        self.board = [
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0],
-            [0, 0, 0, 0, 2, 1, 2]
-        ] # REALLY NEW BOARD HERE
+        print("Update Draw Board : ", self.board)
         self.after(500, self.update_draw_board)
 
     #======================= GAME =============================
@@ -79,7 +82,6 @@ class MyCanvas(tk.Canvas):
                          text="Current Player: Red", font=("Arial", 24),
                          fill="white")
         self.draw_board()
-
         self.update_draw_board()
 
     def handle_click(self, event):
@@ -99,30 +101,28 @@ class MyCanvas(tk.Canvas):
         MyButton(self, 200, 230, "Ordinateur contre Ordinateur",
                  self.start_game_ia)
 
-    def start_game_pvp(self, event=None):
+    def start_game_pvp(self):
         self.clear()
         self.master.game.gameType = GameType.GameType.PVP
         print("Game Type : ", self.master.game.gameType)
         self.setup_game()
         self.master.bind('m', self.back_to_menu)
 
-    def start_game_pve(self, event=None):
+    def start_game_pve(self):
         self.clear()
-        self.current_screen = "game"
-        self.create_text(200, 40, text="Game Screen PVE", font=("Arial", 24))
-        self.create_text(200, 200, text="Press 'm' for Menu",
-                         font=("Arial", 16))
+        self.master.game.gameType = GameType.GameType.PVC
+        print("Game Type : ", self.master.game.gameType)
+        self.setup_game()
         self.master.bind('m', self.back_to_menu)
 
-    def start_game_ia(self, event=None):
+    def start_game_ia(self):
         self.clear()
-        self.current_screen = "game"
-        self.create_text(200, 40, text="Game Screen IA", font=("Arial", 24))
-        self.create_text(200, 200, text="Press 'm' for Menu",
-                         font=("Arial", 16))
+        self.master.game.gameType = GameType.GameType.CVC
+        print("Game Type : ", self.master.game.gameType)
+        self.setup_game()
         self.master.bind('m', self.back_to_menu)
 
-    def back_to_menu(self, event=None):
+    def back_to_menu(self):
         if self.current_screen == "game":
             self.show_menu()
             self.master.unbind('m')

@@ -3,7 +3,7 @@ import Bot as Bot
 import Player as Player
 
 class Game:
-    gameType = GameType.GameType.PVC
+    gameType = GameType.GameType.PVP
     IsFinished = False
     _instance = None  # Variable de classe pour stocker l'unique instance
     player1 = Player.Player()
@@ -16,25 +16,15 @@ class Game:
         return cls._instance
 
     def __init__(self, gameType=None):
-        #gui=None, this is in args
-        # if gui is not None:
-        #     print("Set GUI")
-        #     self.gui = gui
         if gameType is not None:
             print("Set Game Type : ", gameType)
             self.GameType = GameType.GameType(gameType)
 
         if not hasattr(self,
                        'initialized'):  # Vérifiez si l'instance a déjà été initialisée
-            # self.board = [[0 for _ in range(7)] for _ in range(6)]
             self.player_turn = 1
             self.initialized = True  # Marquez l'instance comme initialisée
             self.gameType = GameType.GameType.PVP
-
-    # def setGUI(self, gui):
-    #     print("Set GUI")
-    #     print(gui)
-    #     self.gui = gui  # Instance de Connect4GUI
 
     def setGameType(self, gameType):
         self.gameType = gameType  # Instance de Connect4GUI
@@ -77,8 +67,6 @@ class Game:
                       self.player_turn)
 
                 row[column] = self.player_turn
-
-                # self.gui.place_token(5 - i, column,self.player_turn)
                 # Place a Token in the board
 
                 self.player_turn = 2 if self.player_turn == 1 else 1
@@ -87,8 +75,6 @@ class Game:
         print("Player turn : ", self.gameType)
         if GameType.GameType.CVC == self.gameType:
             print("Bot turn !!!")
-            # self.gui.root.after(1000, self.playTurn, -1,
-            #                     False)  # Collum redifined where the bot played
             #Loop for the bot to play
 
     def check_win(self):
@@ -126,7 +112,6 @@ class Game:
                     winner = self.board[row][col]
 
         if winner != 0:
-            # self.gui.display_winner(self.board[row][col])
             self.IsFinished = True
 
     def check_draw(self):
@@ -167,7 +152,6 @@ class Game:
             print("Invalid move. Try again.")
             return
         self.make_move(column)
-        #self.print_board()
 
     def play(self, root):
         self.IsFinished = False  # Initialiser la variable avec la casse correcte
