@@ -72,7 +72,7 @@ class Game:
                 # Place a Token in the board
 
                 self.player_turn = 2 if self.player_turn == 1 else 1
-                actuel_player = 1 if self.player_turn == 1 else 2
+                actuel_player = self.player1 if self.player_turn == 1 else self.player2
                 break
             i += 1
         print("Player turn : ", self.gameType)
