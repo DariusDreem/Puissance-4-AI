@@ -8,6 +8,8 @@ class Game:
     _instance = None  # Variable de classe pour stocker l'unique instance
     player1 = Player.Player()
     player2 = Player.Player()
+    player_turn = 1
+    actuel_player = 1 if player_turn == 1 else 2
     board = [[0 for _ in range(7)] for _ in range(6)]
     
     def __new__(cls, args=None):
@@ -70,6 +72,7 @@ class Game:
                 # Place a Token in the board
 
                 self.player_turn = 2 if self.player_turn == 1 else 1
+                actuel_player = 1 if self.player_turn == 1 else 2
                 break
             i += 1
         print("Player turn : ", self.gameType)
