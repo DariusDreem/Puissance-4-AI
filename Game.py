@@ -31,11 +31,7 @@ class Game:
 
     def setGameType(self, gameType):
         self.gameType = gameType  # Instance de Connect4GUI
-        if self.gameType == GameType.GameType.PVC:
-            self.player2 = Bot.Bot("./Data/Test.csv")
-        elif self.gameType == GameType.GameType.CVC:
-            self.player1 = Bot.Bot("./Data/Test.csv")
-            self.player2 = Bot.Bot("./Data/Test.csv")
+        
 
     def print_board(self):
         print("\n")
@@ -126,6 +122,16 @@ class Game:
             print("It's a draw!")
             self.IsFinished = True
 
+    def SetPlayerPVC(self):
+        self.player1 = Player.Player()
+        self.player2 = Bot.Bot()
+    
+    def SetPlayerCVC(self):
+        self.player1 = Bot.Bot()
+        self.player2 = Bot.Bot()
+
+
+
     def playTurn(self, column=0, playerClick=True):
         if GameType.GameType.CVC is self.gameType and playerClick is True:
             return
@@ -148,7 +154,7 @@ class Game:
         self.check_draw()
 
     def BotPlay(self):
-        bot = Bot.Bot("./Data/Test.csv")
+        bot = Bot.Bot()
         column = bot.Play(self.board, self.player_turn, self.is_valid_move())
         self.make_move(column)
 

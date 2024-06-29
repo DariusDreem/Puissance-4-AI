@@ -1,16 +1,17 @@
-import pandas as pd
+import pandas as pd #type: ignore
 import os
 import random
 
 class Bot:
-    def __init__(self, csv_file):
-        self.csv_file = csv_file
+    csv_file = None
+    def __init__(self):
+        self.csv_file = "./Data/Test.csv"
         self.games_data = None
-        if os.path.exists(csv_file):
-            self.games_data = pd.read_csv(csv_file)
+        if os.path.exists(self.csv_file):
+            self.games_data = pd.read_csv(self.csv_file)
             self.learn_from_games()
         else:
-            print(f"Le fichier {csv_file} n'existe pas. Le bot fonctionnera sans les données des parties précédentes.")
+            print(f"Le fichier {self.csv_file} n'existe pas. Le bot fonctionnera sans les données des parties précédentes.")
 
     def learn_from_games(self):
         # Analyse des parties précédentes pour ajuster la stratégie
