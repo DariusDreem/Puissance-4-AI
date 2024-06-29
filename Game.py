@@ -2,6 +2,7 @@ import GameType
 import Bot as Bot
 import Player as Player
 
+
 class Game:
     gameType = GameType.GameType.PVP
     IsFinished = False
@@ -11,7 +12,7 @@ class Game:
     player_turn = 1
     actuel_player = 1 if player_turn == 1 else 2
     board = [[0 for _ in range(7)] for _ in range(6)]
-    
+
     def __new__(cls, args=None):
         if cls._instance is None:
             cls._instance = super(Game, cls).__new__(cls)
@@ -49,7 +50,6 @@ class Game:
                 valid_moves.append(column)
         return valid_moves
 
-
     def finishLoadGui(self):
         print("Finish Load Gui")
         print("Game Type : ", self.gameType)
@@ -63,7 +63,11 @@ class Game:
         if self.IsFinished:
             return
 
+        print("Column : ", column)
+        print("board : ", self.board)
         for row in reversed(self.board):
+            print("Row : ", row)
+            print("Column : ", row[column])
             if row[column] == 0:
                 print("ligne : ", i, " colonne : ", column, " joueur : ",
                       self.player_turn)
@@ -134,13 +138,12 @@ class Game:
         #         self.BotPlay()
         # elif GameType.GameType.CVC == self.gameType:
         #     self.BotPlay()
-        
-            
-            
-        column = self.player1.Play(column,self.board, self.player_turn, self.is_valid_move()) if self.player_turn == 1 else self.player2.Play(column,self.board, self.player_turn, self.is_valid_move())
+
+        column = self.player1.Play(column, self.board, self.player_turn,
+                                   self.is_valid_move()) if self.player_turn == 1 else self.player2.Play(
+            column, self.board, self.player_turn, self.is_valid_move())
         self.make_move(column)
 
-        
         self.check_win()
         self.check_draw()
 
@@ -148,8 +151,7 @@ class Game:
         bot = Bot.Bot("./Data/Test.csv")
         column = bot.Play(self.board, self.player_turn, self.is_valid_move())
         self.make_move(column)
-    
-    
+
     def PlayerPlay(self, column):
         if column not in self.is_valid_move():
             print("Invalid move. Try again.")
@@ -159,3 +161,4 @@ class Game:
     def play(self, root):
         self.IsFinished = False  # Initialiser la variable avec la casse correcte
         root.mainloop()  # Now the game will run on GUI and He update only the GUI
+

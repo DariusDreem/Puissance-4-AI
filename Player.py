@@ -6,3 +6,4 @@ class Player:
         if column not in columns_list:
             print("Invalid move. Try again.")
             return
+        return column

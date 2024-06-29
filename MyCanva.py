@@ -22,14 +22,6 @@ class MyCanvas(tk.Canvas):
         self.canvas = self
         self.board = [[0] * self.cols for _ in range(self.rows)]
         self.player = 1
-    # self.board = [
-        #     [0, 0, 0, 0, 0, 0, 0],
-        #     [0, 0, 0, 0, 0, 0, 0],
-        #     [0, 0, 0, 0, 0, 0, 0],
-        #     [0, 0, 0, 0, 0, 0, 0],
-        #     [0, 0, 0, 0, 0, 0, 0],
-        #     [0, 0, 0, 0, 2, 1, 2]
-        # ]  # REALLY BOARD HERE
         self.show_menu()
         print("MyCanvas init : ", self.master.game)
 
@@ -52,18 +44,9 @@ class MyCanvas(tk.Canvas):
         self.canvas.bind("<Button-1>", self.handle_click)
 
     def update_draw_board(self):
-        # self.board = [
-        #     [0, 0, 0, 0, 0, 0, 0],
-        #     [0, 0, 0, 0, 0, 0, 0],
-        #     [0, 0, 0, 0, 1, 0, 0],
-        #     [0, 0, 0, 0, 1, 0, 0],
-        #     [0, 0, 0, 0, 1, 0, 0],
-        #     [0, 0, 0, 0, 2, 1, 2]
-        # ] # REALLY NEW BOARD HERE
         self.board = self.master.game.board
         self.draw_board()
-        print("Update Draw Board : ", self.board)
-        self.after(500, self.update_draw_board)
+        self.after(100, self.update_draw_board)
 
     #======================= GAME =============================
 
@@ -86,7 +69,7 @@ class MyCanvas(tk.Canvas):
 
     def handle_click(self, event):
         print("Column : ", event.x // self.cell_size)
-        # NATHAN UPDATE REALLY BOARD
+        self.master.game.playTurn(event.x // self.cell_size)
 
     # ========================== MENU ==========================
 
