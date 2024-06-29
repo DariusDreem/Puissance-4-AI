@@ -3,10 +3,12 @@ import tkinter as tk
 
 import GameType
 from MyButton import MyButton
+from MyLabel import MyLabel
 
 
 class MyCanvas(tk.Canvas):
     board = None
+    fontSize = 16
 
     def __init__(self, master):
         super().__init__(master)
@@ -17,8 +19,8 @@ class MyCanvas(tk.Canvas):
         self.cols = 7
         self.cell_size = 100
         self.board = self.master.game.board
-        self.width = self.cols * self.cell_size
-        self.height = (self.rows + 1) * self.cell_size
+        self.width = (self.cols * self.cell_size)
+        self.height = ((self.rows + 1) * self.cell_size)
         self.canvas = self
         self.board = [[0] * self.cols for _ in range(self.rows)]
         self.player = 1
@@ -27,10 +29,13 @@ class MyCanvas(tk.Canvas):
 
     def draw_board(self):
         self.delete("all")
+        text = f"Joueur actuelle {self.master.game.player_turn}"
+        print("Text : ", text)
+        self.create_text(self.winfo_reqwidth() // 2, self.fontSize , text= text, font=("Helvetica", self.fontSize), fill="black")
         for i in range(self.rows):
             for j in range(self.cols):
-                x0 = j * self.cell_size
-                y0 = i * self.cell_size
+                x0 = j * self.cell_size + 5
+                y0 = i * self.cell_size + 50
                 x1 = x0 + self.cell_size
                 y1 = y0 + self.cell_size
                 self.create_rectangle(x0, y0, x1, y1, outline="black")
@@ -40,7 +45,6 @@ class MyCanvas(tk.Canvas):
                 elif self.board[i][j] == 2:
                     self.create_oval(x0 + 10, y0 + 10, x1 - 10, y1 - 10,
                                      fill="yellow")
-
         self.canvas.bind("<Button-1>", self.handle_click)
 
     def update_draw_board(self):
@@ -56,14 +60,12 @@ class MyCanvas(tk.Canvas):
         self.restart_button = None
         self.rows, self.cols = 6, 7
         self.cell_size = 100
-        self.width = self.cols * self.cell_size
+        self.width = (self.cols * self.cell_size) + 10
         self.height = (self.rows + 1) * self.cell_size
         self.config(width=self.width, height=self.height)
-        self.create_rectangle(0, 0, self.width, self.cell_size, fill="blue",
-                              outline="blue")
-        self.create_text(self.width / 2, self.cell_size / 2,
-                         text="Current Player: Red", font=("Arial", 24),
-                         fill="white")
+
+
+
         self.draw_board()
         self.update_draw_board()
 
@@ -96,6 +98,7 @@ class MyCanvas(tk.Canvas):
         self.master.game.gameType = GameType.GameType.PVC
         print("Game Type : ", self.master.game.gameType)
         self.setup_game()
+        self.master.game.SetPlayerPVC()
         self.master.bind('m', self.back_to_menu)
 
     def start_game_ia(self):
@@ -103,6 +106,7 @@ class MyCanvas(tk.Canvas):
         self.master.game.gameType = GameType.GameType.CVC
         print("Game Type : ", self.master.game.gameType)
         self.setup_game()
+        self.master.game.SetPlayerCVC()
         self.master.bind('m', self.back_to_menu)
 
     def back_to_menu(self):
