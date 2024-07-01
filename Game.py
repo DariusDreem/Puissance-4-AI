@@ -134,6 +134,14 @@ class Game:
 
 
     def playTurn(self, column=0, playerClick=True):
+        print(self.gameType)
+        if self.gameType == GameType.GameType.CVC:
+            while not self.IsFinished:
+                print("while entered")
+                column = self.player1.Play(column, self.board, self.player_turn,self.is_valid_move()) if self.player_turn == 1 else self.player2.Play(column, self.board, self.player_turn, self.is_valid_move())
+                self.make_move(column)
+                self.check_win()
+                self.check_draw()
         # elif GameType.GameType.PVC == self.gameType:
 
         #     if (self.player_turn == 1):
