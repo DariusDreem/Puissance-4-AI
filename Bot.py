@@ -28,6 +28,7 @@ class Bot:
     
     # @staticmethod
     def Play(self, column, board, player_turn, columns_list):
+        print("Bot turn !!!")
         self.get_valid_col(columns_list)
 
         # Vérifier s'il y a un coup gagnant pour le bot
