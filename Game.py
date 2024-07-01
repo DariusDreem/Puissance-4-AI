@@ -32,7 +32,11 @@ class Game:
     def setGameType(self, gameType):
         self.gameType = gameType  # Instance de Connect4GUI
         
-
+    def ResetBoardGame(self):
+        self.board = [[0 for _ in range(7)] for _ in range(6)]
+        self.IsFinished = False
+        self.player_turn = 1
+    
     def print_board(self):
         print("\n")
         for row in self.board:
