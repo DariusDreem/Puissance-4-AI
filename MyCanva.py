@@ -28,10 +28,6 @@ class MyCanvas(tk.Canvas):
         print("MyCanvas init : ", self.master.game)
 
     def draw_board(self):
-        self.delete("all")
-        text = f"Joueur actuelle {self.master.game.player_turn}"
-        print("Text : ", text)
-        self.create_text(self.winfo_reqwidth() // 2, self.fontSize , text= text, font=("Helvetica", self.fontSize), fill="black")
         for i in range(self.rows):
             for j in range(self.cols):
                 x0 = j * self.cell_size + 5
@@ -48,9 +44,19 @@ class MyCanvas(tk.Canvas):
         self.canvas.bind("<Button-1>", self.handle_click)
 
     def update_draw_board(self):
+        # self.restart_button = MyButton(self, 200, 150, "Rejouer", self.master.game.restart)
+        self.delete("all")
+        if not self.master.game.IsFinished:
+            text = f"Joueur actuelle {self.master.game.player_turn}"
+        else :
+            text = f"Joueur gagnant {self.master.game.player_turn}"
+
+        self.create_text(self.winfo_reqwidth() // 2, self.fontSize, text=text,
+                         font=("Helvetica", self.fontSize), fill="black")
         self.board = self.master.game.board
         self.draw_board()
-        self.after(100, self.update_draw_board)
+        if not self.master.game.IsFinished:
+            self.after(100, self.update_draw_board)
 
     #======================= GAME =============================
 
@@ -63,8 +69,6 @@ class MyCanvas(tk.Canvas):
         self.width = (self.cols * self.cell_size) + 10
         self.height = (self.rows + 1) * self.cell_size
         self.config(width=self.width, height=self.height)
-
-
 
         self.draw_board()
         self.update_draw_board()
