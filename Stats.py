@@ -6,7 +6,7 @@ import numpy as np
 
 class Puissance4CSV:
     # create a list numpy array
-    _arrayTurn = None
+    arrayTurn = None
     _scoreGame = None
     _dfCSV = None
     _fileDF = "Data/data.csv"
@@ -25,10 +25,10 @@ class Puissance4CSV:
 
     def AjouterLigne(self, coord):
         nouvelle_paire = np.array([[coord[0], coord[1]]])
-        if self._arrayTurn is None:
-            self._arrayTurn = nouvelle_paire
+        if self.arrayTurn is None:
+            self.arrayTurn = nouvelle_paire
         else:
-            self._arrayTurn = np.vstack([self._arrayTurn, nouvelle_paire])
+            self.arrayTurn = np.vstack([self.arrayTurn, nouvelle_paire])
 
     def _CreateGameDF(self, newNumberOfThisGame=0,winner=1):
         data = {
@@ -42,7 +42,7 @@ class Puissance4CSV:
         self._dfCSV = pd.concat([new_row, self._dfCSV], ignore_index=True)
 
         new_row = {
-            (f'Partie{newNumberOfThisGame}', 'Coordonnee'): self._arrayTurn.tolist(),
+            (f'Partie{newNumberOfThisGame}', 'Coordonnee'): self.arrayTurn.tolist(),
             (f'Partie{newNumberOfThisGame}.1', 'Score'): self._scoreGame.tolist()
         }
         new_row_df = pd.DataFrame(new_row)
@@ -56,11 +56,11 @@ class Puissance4CSV:
         except pd.errors.EmptyDataError:
             numberOfLastGame = 0
 
-        p1Turn = np.array([self._arrayTurn[0]])
-        p2Turn = np.array([self._arrayTurn[1]])
+        p1Turn = np.array([self.arrayTurn[0]])
+        p2Turn = np.array([self.arrayTurn[1]])
 
-        for i in range(len(self._arrayTurn) - 2):
-            row = self._arrayTurn[i + 2]
+        for i in range(len(self.arrayTurn) - 2):
+            row = self.arrayTurn[i + 2]
             if (i+2) % 2 == 0:
                 p1Turn = np.vstack([p1Turn, row])
             else:
@@ -125,14 +125,13 @@ class Puissance4CSV:
 
 
 
-player_data = Puissance4CSV()
 
-player_data.AjouterLigne([1, 4])
-player_data.AjouterLigne([2, 4])
-player_data.AjouterLigne([3, 5])
-player_data.AjouterLigne([3, 4])
-player_data.AjouterLigne([3, 2])
-player_data.AjouterLigne([1, 2])
-player_data.AjouterLigne([0, 2])
+# player_data.AjouterLigne([1, 4])
+# player_data.AjouterLigne([2, 4])
+# player_data.AjouterLigne([3, 5])
+# player_data.AjouterLigne([3, 4])
+# player_data.AjouterLigne([3, 2])
+# player_data.AjouterLigne([1, 2])
+# player_data.AjouterLigne([0, 2])
 
-player_data.Sauvegarder(1)
+# player_data.Sauvegarder(1)

@@ -3,14 +3,13 @@ import tkinter as tk
 
 import GameType
 from MyButton import MyButton
-from MyLabel import MyLabel
-
 
 class MyCanvas(tk.Canvas):
     board = None
     fontSize = 16
     textTopBoard = None
     buttonRestart = None
+    clickDeosntWork = False
 
     # ========================== MENU ==========================
 
@@ -88,7 +87,12 @@ class MyCanvas(tk.Canvas):
 
     def handle_click(self, event):
         print("Column : ", event.x // self.cell_size)
-        self.master.game.playTurn(event.x // self.cell_size)
+        if self.clickDeosntWork or self.master.game.gameType is GameType.GameType.CVC:
+            self.master.game.playTurn(event.x // self.cell_size)
+        else :
+            print("Click doesn't work")
+            self.clickDeosntWork = True
+
 
     def draw_board(self):
         for i in range(self.rows):
@@ -114,23 +118,21 @@ class MyCanvas(tk.Canvas):
         else :
             text = f"Joueur gagnant {self.master.game.player_turn}"
 
-        textTopBoard = self.create_text(self.winfo_reqwidth() // 2, self.fontSize, text=text,
+        self.create_text(self.winfo_reqwidth() // 2, self.fontSize, text=text,
                          font=("Helvetica", self.fontSize), fill="black")
         self.board = self.master.game.board
         self.draw_board()
         if not self.master.game.IsFinished:
             self.after(100, self.update_draw_board)
-            # return
         else:
             self.buttonRestart = tk.Button(self.root, text="Restart Game", command=self.restart_game)
             self.buttonRestart.pack()
 
     def restart_game(self):
-        # self.master.game.restart()
-        # self.update_draw_board()
         self.buttonRestart.pack_forget()
         self.master.game.ResetBoardGame()
         self.show_menu()
         self.width = 230
         self.height = 500
+        self.clickDeosntWork = False
 

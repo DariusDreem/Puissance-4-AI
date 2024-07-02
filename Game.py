@@ -1,9 +1,14 @@
 import GameType
 import Bot as Bot
 import Player as Player
-import matplotlib.pyplot as plt #type: ignore
+
+import matplotlib.pyplot as plt
+
 from collections import Counter
 import random
+
+from Stats import Puissance4CSV
+
 
 class Game:
     gameType = GameType.GameType.PVP
@@ -14,6 +19,8 @@ class Game:
     player_turn = 1
     actuel_player = 1 if player_turn == 1 else 2
     board = [[0 for _ in range(7)] for _ in range(6)]
+    player_data = None
+
 
     def __new__(cls, args=None):
         if cls._instance is None:
@@ -21,6 +28,8 @@ class Game:
         return cls._instance
 
     def __init__(self, gameType=None):
+        self.player_data = Puissance4CSV()
+
         if gameType is not None:
             print("Set Game Type : ", gameType)
             self.GameType = GameType.GameType(gameType)
@@ -75,10 +84,10 @@ class Game:
                       self.player_turn)
 
                 row[column] = self.player_turn
-                # Place a Token in the board
 
                 self.player_turn = 2 if self.player_turn == 1 else 1
                 actuel_player = self.player1 if self.player_turn == 1 else self.player2
+                self.player_data.AjouterLigne([i, column])
                 break
             i += 1
         print("Player turn : ", self.gameType)
@@ -121,7 +130,9 @@ class Game:
                     winner = self.board[row][col]
 
         if winner != 0:
+            self.player_data.Sauvegarder(winner)
             self.IsFinished = True
+
 
     def check_draw(self):
         if all(cell != 0 for row in self.board for cell in row):
