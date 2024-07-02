@@ -124,10 +124,6 @@ class Puissance4CSV:
 
         return parts
 
-
-
-
-
 # player_data.AjouterLigne([1, 4])
 # player_data.AjouterLigne([2, 4])
 # player_data.AjouterLigne([3, 5])

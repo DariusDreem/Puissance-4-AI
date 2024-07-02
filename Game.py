@@ -66,7 +66,6 @@ class Game:
         print("Game Type : ", self.gameType)
         print("Player turn : ", GameType.GameType.CVC)
         if GameType.GameType.CVC == self.gameType:
-            # print(gui)
             self.playTurn(-1, False)
 
     def make_move(self, column):
@@ -74,14 +73,8 @@ class Game:
         if self.IsFinished:
             return
 
-        print("Column : ", column)
-        print("board : ", self.board)
         for row in reversed(self.board):
-            print("Row : ", row)
-            print("Column : ", row[column])
             if row[column] == 0:
-                print("ligne : ", i, " colonne : ", column, " joueur : ",
-                      self.player_turn)
 
                 row[column] = self.player_turn
 
