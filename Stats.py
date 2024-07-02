@@ -1,79 +1,117 @@
 import pandas as pd
+import numpy as np
 
 
 class Puissance4CSV:
     # create a list numpy array
-
-    turnPlayed = np.
+    _arrayTurn = None
+    _scoreGame = None
+    _dfCSV = None
+    _fileDF = "data.csv"
 
     def __init__(self):
         # Initialisation des données
+        print("Initialisation des données")
+
+    def AjouterLigne(self, coord):
+        nouvelle_paire = np.array([[coord[0], coord[1]]])
+        if self._arrayTurn is None:
+            self._arrayTurn = nouvelle_paire
+        else:
+            self._arrayTurn = np.vstack([self._arrayTurn, nouvelle_paire])
+
+    def _CreateGameDF(self, newNumberOfThisGame=0,winner=1):
         data = {
-            ('Partie1','Coordonnee'): [[1,4], [1,5], [2,5]],
-            ('Partie1', 'Score'): [0.001, 0.002, 0.003],
-            # ('Partie1','P2', 'Coordonnée'): [[1, 5], [2, 5], [3, 5]],
-            # ('Partie1','P2', 'Score'): [0.015, 0.026, 0.039]
+            (f'Partie{newNumberOfThisGame}', 'Coordonnee'): [],
+            (f'Partie{newNumberOfThisGame}.1', 'Score'): [],
         }
-        self.df = pd.DataFrame(data)
+        self._dfCSV = pd.DataFrame(data)
 
-        X = 1
-        new_row = pd.DataFrame([['Winner',str(X)]], columns=self.df.columns)
+        new_row = pd.DataFrame([['Winner', str(winner)]], columns=self._dfCSV.columns)
 
-        self.df = pd.concat([new_row, self.df], ignore_index=True)
-        print(self.df)
+        self._dfCSV = pd.concat([new_row, self._dfCSV], ignore_index=True)
 
-        self.df.to_csv('test.csv', sep = ';')
-
-    def ajouter_ligne(self, coord):
-
-
-    def ajouter_ligneEnd(self, coord):
-        # Création d'une nouvelle ligne pour les colonnes 'P1' et 'P2'
         new_row = {
-            ('Partie1', 'Coordonnée'): [coord],
-            # ('Partie1','Score'): [score]
+            (f'Partie{newNumberOfThisGame}', 'Coordonnee'): self._arrayTurn.tolist(),
+            (f'Partie{newNumberOfThisGame}.1', 'Score'): self._scoreGame.tolist()
         }
-
-        # Convertir new_row en DataFrame avec les mêmes colonnes que self.df
         new_row_df = pd.DataFrame(new_row)
+        self._dfCSV = pd.concat([self._dfCSV, new_row_df], ignore_index=True)
 
-        # Concaténer la nouvelle ligne au DataFrame existant
-        self.df = pd.concat([self.df, new_row_df], ignore_index=True)
+    def Sauvegarder(self, winner):
+        df = pd.read_csv(self._fileDF, sep=';')
+        numberOfLastGame = int(df.columns[-2][6:]) # get penultimate column name and extract the number
 
-    def afficher_dataframe(self):
-        print(self.df)
+        p1Turn = np.array([self._arrayTurn[0]])
+        p2Turn = np.array([self._arrayTurn[1]])
+
+        for i in range(len(self._arrayTurn) - 2):
+            row = self._arrayTurn[i + 2]
+            if (i+2) % 2 == 0:
+                p1Turn = np.vstack([p1Turn, row])
+            else:
+                p2Turn = np.vstack([p2Turn, row])
+
+        if winner == 1:
+            scoreP1 = np.array(self.generate_geometric_parts(p1Turn.shape[0], 1))
+            scoreP2 = np.array(self.generate_geometric_parts(p2Turn.shape[0], -1))
+        else:
+            scoreP1 = np.array(self.generate_geometric_parts(p1Turn.shape[0], -1))
+            scoreP2 = np.array(self.generate_geometric_parts(p2Turn.shape[0], 1))
+
+        self._scoreGame = np.empty(scoreP1.size + scoreP2.size, dtype=scoreP1.dtype)
+        self._scoreGame[0::2] = scoreP1
+        self._scoreGame[1::2] = scoreP2
+
+        self._CreateGameDF(numberOfLastGame + 1, winner)
+
+        # print(self._dfCSV)
+
+        dfOldGame = pd.read_csv(self._fileDF, sep=';', index_col=0, header=[0, 1])
+        print(self._dfCSV)
+        print("========")
+        print(dfOldGame)
+        df_combined = pd.concat([dfOldGame, self._dfCSV], axis=1)
+        print(df_combined)
+        df_combined.to_csv(self._fileDF, sep=';')
+
+    def AfficherDF(self):
+        print(self._dfCSV)
 
     def charger(self):
         try:
-            self.df = pd.read_csv(self.fichier, index_col=0)
+            self._dfCSV = pd.read_csv(self._fileDF, sep=';')
+            return self._dfCSV
         except FileNotFoundError:
             print("Fichier non trouvé. Un nouveau fichier sera créé.")
 
-    def generate_geometric_parts(total_percentage, num_parts, ratio):
+    def generate_geometric_parts(self,num_parts, pointOfGame): # pointOfGame is 1 if win -1 if lose
+        total_percentage = 100
+        # num_parts = 5
+        ratio = 1.2
+
         # Calculer le premier terme a
-        a = (total_percentage * (ratio - 1)) / (ratio ** num_parts - 1)
+        a = (total_percentage * (ratio - 1)) / (ratio ** num_parts - 1) * pointOfGame
 
         # Générer les parts
-        parts = [a * (ratio ** i) for i in range(num_parts)]
+        parts = [(a * (ratio ** i)) for i in range(num_parts)]
 
         return parts
 
 
-
 # Utilisation de la classe
+# player_data.afficher_dataframe()  # Afficher le DataFrame initial
 player_data = Puissance4CSV()
-player_data.afficher_dataframe()  # Afficher le DataFrame initial
 
-# Ajout d'une nouvelle ligne pour 'P1' et 'P2'
-# player_data.ajouter_ligne([3,6])
-# player_data.ajouter_ligne([3,6])
-# player_data.afficher_dataframe()  # Afficher le DataFrame mis à jour
+# player_data.AjouterLigne([1, 4])
+# player_data.AjouterLigne([2, 4])
+# player_data.AjouterLigne([3, 5])
+# player_data.AjouterLigne([3, 4])
+# player_data.AjouterLigne([3, 2])
+# player_data.AjouterLigne([1, 2])
+# player_data.AjouterLigne([0, 2])
+#
+# player_data.Sauvegarder(1)
 
-# Exemple d'utilisation
-total_percentage = 100
-num_parts = 5
-ratio = 1.5
-
-# parts = generate_geometric_parts(total_percentage, num_parts, ratio)
-# print("Les parts sont :", parts)
-# print("La somme des parts est :", sum(parts))
+df = player_data.charger()
+print(df)
