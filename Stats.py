@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import numpy as np
 
@@ -16,6 +18,7 @@ class Puissance4CSV:
         try:
             self._dfCSV = pd.read_csv(self._fileDF, sep=';')
         except FileNotFoundError:
+            os.makedirs("./Data/")
             open(self._fileDF, 'w').close()
             print("Fichier non trouvé. Un nouveau fichier sera créé.")
 
