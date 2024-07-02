@@ -21,7 +21,8 @@ class Puissance4CSV:
             os.makedirs("./Data/")
             open(self._fileDF, 'w').close()
             print("Fichier non trouvé. Un nouveau fichier sera créé.")
-
+        except pd.errors.EmptyDataError:
+            print("Pas de data dans csv dfOldGame!")
 
     def AjouterLigne(self, coord):
         nouvelle_paire = np.array([[coord[0], coord[1]]])
