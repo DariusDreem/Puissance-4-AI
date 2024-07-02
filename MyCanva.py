@@ -10,6 +10,7 @@ class MyCanvas(tk.Canvas):
     board = None
     fontSize = 16
     textTopBoard = None
+    buttonRestart = None
 
     # ========================== MENU ==========================
 
@@ -82,8 +83,6 @@ class MyCanvas(tk.Canvas):
         self.width = (self.cols * self.cell_size) + 10
         self.height = (self.rows + 1) * self.cell_size
         self.config(width=self.width, height=self.height)
-
-
         self.draw_board()
         self.update_draw_board()
 
@@ -105,9 +104,8 @@ class MyCanvas(tk.Canvas):
                 elif self.board[i][j] == 2:
                     self.create_oval(x0 + 10, y0 + 10, x1 - 10, y1 - 10,
                                      fill="yellow")
+
         self.canvas.bind("<Button-1>", self.handle_click)
-
-
 
     def update_draw_board(self):
         self.delete("all")
@@ -123,4 +121,16 @@ class MyCanvas(tk.Canvas):
         if not self.master.game.IsFinished:
             self.after(100, self.update_draw_board)
             # return
-        # self.restart_button = MyButton(self, 200, 150, "Rejouer", print("Rejouer"))
+        else:
+            self.buttonRestart = tk.Button(self.root, text="Restart Game", command=self.restart_game)
+            self.buttonRestart.pack()
+
+    def restart_game(self):
+        # self.master.game.restart()
+        # self.update_draw_board()
+        self.buttonRestart.pack_forget()
+        self.master.game.ResetBoardGame()
+        self.show_menu()
+        self.width = 230
+        self.height = 500
+
