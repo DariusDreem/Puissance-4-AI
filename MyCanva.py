@@ -10,6 +10,7 @@ class MyCanvas(tk.Canvas):
     textTopBoard = None
     buttonRestart = None
     clickDeosntWork = False
+    trainningIA = None
 
     # ========================== MENU ==========================
 
@@ -22,8 +23,10 @@ class MyCanvas(tk.Canvas):
         self.cols = 7
         self.cell_size = 100
         self.board = self.master.game.board
-        self.width = (self.cols * self.cell_size)
-        self.height = ((self.rows + 1) * self.cell_size)
+        self.width = 380
+        self.height = 350
+        self.config(width=self.width, height=self.height)
+
         self.canvas = self
         self.board = [[0] * self.cols for _ in range(self.rows)]
         self.player = 1
@@ -40,13 +43,14 @@ class MyCanvas(tk.Canvas):
                  self.start_game_pve)
         MyButton(self, 200, 230, "Ordinateur contre Ordinateur",
                  self.start_game_ia)
+        MyButton(self, 200, 270, "Entraînement  IA",
+                 self.Start_training_ia)
 
     def start_game_pvp(self):
         self.clear()
         self.master.game.gameType = GameType.GameType.PVP
         print("Game Type : ", self.master.game.gameType)
         self.setup_game()
-        self.master.bind('m', self.back_to_menu)
 
     def start_game_pve(self):
         self.clear()
@@ -54,7 +58,6 @@ class MyCanvas(tk.Canvas):
         print("Game Type : ", self.master.game.gameType)
         self.setup_game()
         self.master.game.SetPlayerPVC()
-        self.master.bind('m', self.back_to_menu)
 
     def start_game_ia(self):
         self.clear()
@@ -62,7 +65,16 @@ class MyCanvas(tk.Canvas):
         print("Game Type : ", self.master.game.gameType)
         self.setup_game()
         self.master.game.SetPlayerCVC()
-        self.master.bind('m', self.back_to_menu)
+
+    def Start_training_ia(self):
+        self.clear()
+        self.trainningIA = True
+        self.master.game.gameType = GameType.GameType.CVC
+        print("Game Type : ", self.master.game.gameType)
+        self.setup_game()
+        self.master.game.SetPlayerCVC()
+        self.master.game.playTurn(-1)
+
 
     def back_to_menu(self):
         if self.current_screen == "game":
@@ -86,7 +98,7 @@ class MyCanvas(tk.Canvas):
         self.update_draw_board()
 
     def handle_click(self, event):
-        print("Column : ", event.x // self.cell_size)
+        # print("Column : ", event.x // self.cell_size)
         if self.clickDeosntWork or self.master.game.gameType is GameType.GameType.CVC:
             self.master.game.playTurn(event.x // self.cell_size)
         else :
@@ -127,6 +139,14 @@ class MyCanvas(tk.Canvas):
         else:
             self.buttonRestart = tk.Button(self.root, text="Restart Game", command=self.restart_game)
             self.buttonRestart.pack()
+
+            print("self.trainningIA : ", self.trainningIA)
+            if self.trainningIA:
+                print("Training IA : New game")
+                self.buttonRestart.pack_forget()
+                self.master.game.ResetBoardGame()
+                self.Start_training_ia()
+                
 
     def restart_game(self):
         self.buttonRestart.pack_forget()

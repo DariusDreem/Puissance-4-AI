@@ -96,6 +96,7 @@ class Puissance4CSV:
         df_combined = pd.concat([dfOldGame, self._dfCSV], axis=1)
         print(df_combined)
         df_combined.to_csv(self._fileDF, sep=';')
+        self.arrayTurn = None
 
     def AfficherDF(self):
         print(self._dfCSV)
