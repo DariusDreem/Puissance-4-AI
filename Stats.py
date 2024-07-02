@@ -7,16 +7,17 @@ class Puissance4CSV:
     _arrayTurn = None
     _scoreGame = None
     _dfCSV = None
-    _fileDF = "data.csv"
+    _fileDF = "Data/data.csv"
 
     def __init__(self):
         # Initialisation des données
         print("Initialisation des données")
         # #TEST IF FILE EXIST
-        # try:
-        #     self._dfCSV = pd.read_csv(self._fileDF, sep=';')
-        # except FileNotFoundError:
-        #     print("Fichier non trouvé. Un nouveau fichier sera créé.")
+        try:
+            self._dfCSV = pd.read_csv(self._fileDF, sep=';')
+        except FileNotFoundError:
+            open(self._fileDF, 'w').close()
+            print("Fichier non trouvé. Un nouveau fichier sera créé.")
 
 
     def AjouterLigne(self, coord):
@@ -119,8 +120,8 @@ class Puissance4CSV:
         return parts
 
 
-# Utilisation de la classe
-# player_data.afficher_dataframe()  # Afficher le DataFrame initial
+
+
 player_data = Puissance4CSV()
 
 player_data.AjouterLigne([1, 4])
@@ -132,6 +133,3 @@ player_data.AjouterLigne([1, 2])
 player_data.AjouterLigne([0, 2])
 
 player_data.Sauvegarder(1)
-
-df = player_data.charger()
-print(df)
