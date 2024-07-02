@@ -160,7 +160,7 @@ class Game:
         if self.gameType == GameType.GameType.CVC:
             while not self.IsFinished:
                 print("while entered")
-                column = self.player1.Play(column, self.board, self.player_turn,self.is_valid_move()) if self.player_turn == 1 else self.player2.Play(column, self.board, self.player_turn, self.is_valid_move())
+                column = self.player1.Play(column, self.board, self.player_turn,self.is_valid_move(),self.player_data.arrayTurn) if self.player_turn == 1 else self.player2.Play(column, self.board, self.player_turn, self.is_valid_move(),self.player_data.arrayTurn)
                 self.make_move(column)
                 self.check_win()
                 self.check_draw()
@@ -173,8 +173,8 @@ class Game:
         # elif GameType.GameType.CVC == self.gameType:
         #     self.BotPlay()
         column = self.player1.Play(column, self.board, self.player_turn,
-                                   self.is_valid_move()) if self.player_turn == 1 else self.player2.Play(
-            column, self.board, self.player_turn, self.is_valid_move())
+                                   self.is_valid_move(), self.player_data.arrayTurn) if self.player_turn == 1 else self.player2.Play(
+            column, self.board, self.player_turn, self.is_valid_move(),self.player_data.arrayTurn)
         self.make_move(column)
         self.check_win()
         self.check_draw()
