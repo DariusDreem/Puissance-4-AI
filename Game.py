@@ -1,7 +1,9 @@
 import GameType
 import Bot as Bot
 import Player as Player
-
+import matplotlib.pyplot as plt #type: ignore
+from collections import Counter
+import random
 
 class Game:
     gameType = GameType.GameType.PVP
@@ -127,8 +129,13 @@ class Game:
             self.IsFinished = True
 
     def SetPlayerPVC(self):
-        self.player1 = Player.Player()
-        self.player2 = Bot.Bot()
+        randomint = random.randint(0, 1)
+        if randomint == 0:
+            self.player1 = Player.Player()
+            self.player2 = Bot.Bot()
+        else:
+            self.player1 = Bot.Bot()
+            self.player2 = Player.Player()
     
     def SetPlayerCVC(self):
         self.player1 = Bot.Bot()
@@ -176,3 +183,31 @@ class Game:
         self.IsFinished = False  # Initialiser la variable avec la casse correcte
         root.mainloop()  # Now the game will run on GUI and He update only the GUI
 
+    def analyze_first_moves():
+        games = [Game() for _ in range(1000)]
+        first_moves = [game.first_move for game in games]
+        
+        # Compter la fréquence de chaque premier coup
+        move_counts = Counter(first_moves)
+        
+        # Trier les coups par fréquence décroissante
+        sorted_moves = sorted(move_counts.items(), key=lambda x: x[1], reverse=True)
+        
+        # Séparer les coups et les comptages pour le graphique
+        moves, counts = zip(*sorted_moves)
+        
+        # Créer le graphique
+        plt.figure(figsize=(12, 6))
+        plt.bar(moves, counts)
+        
+        # Personnaliser le graphique
+        plt.title("Fréquence des premiers coups")
+        plt.xlabel("Premier coup")
+        plt.ylabel("Nombre de parties")
+        plt.xticks(rotation=45, ha='right')
+        
+        # Ajuster la mise en page
+        plt.tight_layout()
+        
+        # Afficher le graphique
+        plt.show()

@@ -3,14 +3,16 @@ import os
 import random
 
 class Bot:
+    is_csv_file = False
     csv_file = None
     def __init__(self):
         self.csv_file = "./Data/Test.csv"
         self.games_data = None
         if os.path.exists(self.csv_file):
             self.games_data = pd.read_csv(self.csv_file)
-            self.learn_from_games()
+            self.is_csv_file = True
         else:
+            self.is_csv_file = False
             print(f"Le fichier {self.csv_file} n'existe pas. Le bot fonctionnera sans les données des parties précédentes.")
 
     def learn_from_games(self):
@@ -143,3 +145,6 @@ class Bot:
             score -= 4
 
         return score
+    
+    
+    
