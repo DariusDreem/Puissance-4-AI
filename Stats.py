@@ -12,6 +12,12 @@ class Puissance4CSV:
     def __init__(self):
         # Initialisation des données
         print("Initialisation des données")
+        # #TEST IF FILE EXIST
+        # try:
+        #     self._dfCSV = pd.read_csv(self._fileDF, sep=';')
+        # except FileNotFoundError:
+        #     print("Fichier non trouvé. Un nouveau fichier sera créé.")
+
 
     def AjouterLigne(self, coord):
         nouvelle_paire = np.array([[coord[0], coord[1]]])
@@ -39,8 +45,12 @@ class Puissance4CSV:
         self._dfCSV = pd.concat([self._dfCSV, new_row_df], ignore_index=True)
 
     def Sauvegarder(self, winner):
-        df = pd.read_csv(self._fileDF, sep=';')
-        numberOfLastGame = int(df.columns[-2][6:]) # get penultimate column name and extract the number
+        df = pd.DataFrame()
+        try:
+            df = pd.read_csv(self._fileDF, sep=';')
+            numberOfLastGame = int(df.columns[-2][6:]) # get penultimate column name and extract the number
+        except pd.errors.EmptyDataError:
+            numberOfLastGame = 0
 
         p1Turn = np.array([self._arrayTurn[0]])
         p2Turn = np.array([self._arrayTurn[1]])
@@ -67,7 +77,14 @@ class Puissance4CSV:
 
         # print(self._dfCSV)
 
-        dfOldGame = pd.read_csv(self._fileDF, sep=';', index_col=0, header=[0, 1])
+        dfOldGame = pd.DataFrame()
+
+        try:
+            dfOldGame = pd.read_csv(self._fileDF, sep=';', index_col=0, header=[0, 1])
+        except pd.errors.EmptyDataError:
+            print("Pas de data dans csv dfOldGame!")
+
+
         print(self._dfCSV)
         print("========")
         print(dfOldGame)
@@ -84,6 +101,9 @@ class Puissance4CSV:
             return self._dfCSV
         except FileNotFoundError:
             print("Fichier non trouvé. Un nouveau fichier sera créé.")
+        except pd.errors.EmptyDataError:
+            print("Pas de data !")
+
 
     def generate_geometric_parts(self,num_parts, pointOfGame): # pointOfGame is 1 if win -1 if lose
         total_percentage = 100
@@ -103,15 +123,15 @@ class Puissance4CSV:
 # player_data.afficher_dataframe()  # Afficher le DataFrame initial
 player_data = Puissance4CSV()
 
-# player_data.AjouterLigne([1, 4])
-# player_data.AjouterLigne([2, 4])
-# player_data.AjouterLigne([3, 5])
-# player_data.AjouterLigne([3, 4])
-# player_data.AjouterLigne([3, 2])
-# player_data.AjouterLigne([1, 2])
-# player_data.AjouterLigne([0, 2])
-#
-# player_data.Sauvegarder(1)
+player_data.AjouterLigne([1, 4])
+player_data.AjouterLigne([2, 4])
+player_data.AjouterLigne([3, 5])
+player_data.AjouterLigne([3, 4])
+player_data.AjouterLigne([3, 2])
+player_data.AjouterLigne([1, 2])
+player_data.AjouterLigne([0, 2])
+
+player_data.Sauvegarder(1)
 
 df = player_data.charger()
 print(df)
