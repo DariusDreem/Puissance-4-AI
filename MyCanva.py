@@ -45,6 +45,8 @@ class MyCanvas(tk.Canvas):
                  self.start_game_ia)
         MyButton(self, 200, 270, "Entraînement  IA",
                  self.Start_training_ia)
+        MyButton(self, 200, 310, "Statistiques",
+                 self.Show_Stats)
 
     def start_game_pvp(self):
         self.clear()
@@ -74,6 +76,10 @@ class MyCanvas(tk.Canvas):
         self.setup_game()
         self.master.game.SetPlayerCVC()
         self.master.game.playTurn(-1)
+
+    def Show_Stats(self):
+        self.clear()
+        print("Show Stats Here ^^")
 
 
     def back_to_menu(self):
