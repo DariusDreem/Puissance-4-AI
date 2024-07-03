@@ -6,10 +6,10 @@ class Bot:
     is_csv_file = False
     csv_file = None
     def __init__(self):
-        self.csv_file = "./Data/Test.csv"
+        self.csv_file = "./Data/data.csv"
         self.games_data = None
         if os.path.exists(self.csv_file):
-            self.games_data = pd.read_csv(self.csv_file)
+            self.games_data = pd.read_csv(self.csv_file, engine="python")
             self.is_csv_file = True
         else:
             self.is_csv_file = False
@@ -81,21 +81,8 @@ class Bot:
                     return col
 
         ## Si ni check_win ni check_block ne renvoient de coup, on regarde l'historique
-        best_move = self.learn_from_games(current_game)
-
-        # Évaluer chaque coup possible
-        # best_score = float('-inf')
-        # best_move = None
-        # for col in range(7):
-        #     if self.is_valid_move(col):
-        #         temp_board = [row[:] for row in board]
-        #         self.simulate_move(temp_board, col, player_turn)
-        #         score = self.evaluate_board(temp_board, player_turn)
-        #         if score > best_score:
-        #             best_score = score
-        #             best_move = col
-
-
+        print("Bot Should Learn")
+        best_move = float(self.learn_from_games(current_game))
 
         return best_move if best_move is not None else random.randint(0, 6)
 

@@ -149,8 +149,16 @@ class Game:
 
 
     def playTurn(self, column=0, playerClick=True):
+        if (self.gameType == GameType.GameType.PVC and type(self.player1) is not Bot.Bot) :
+            if (type(self.player2) is not Bot.Bot):
+                self.SetPlayerPVC()
+
+        if (self.gameType == GameType.GameType.CVC and type(self.player1) is not Bot.Bot) or (self.gameType == GameType.GameType.CVC and type(self.player2) is not Bot.Bot):
+            self.SetPlayerCVC()
+
         print(self.gameType)
         if self.gameType == GameType.GameType.CVC:
+            print("CVC condition")
             while not self.IsFinished:
                 print("while entered")
                 column = self.player1.Play(column, self.board, self.player_turn,self.is_valid_move(),self.player_data.arrayTurn) if self.player_turn == 1 else self.player2.Play(column, self.board, self.player_turn, self.is_valid_move(),self.player_data.arrayTurn)
@@ -165,6 +173,11 @@ class Game:
         #         self.BotPlay()
         # elif GameType.GameType.CVC == self.gameType:
         #     self.BotPlay()
+                
+                print("player 1 ")
+                print(type(self.player1))
+                print("player 2 ")
+                print(type(self.player2))
         column = self.player1.Play(column, self.board, self.player_turn,
                                    self.is_valid_move(), self.player_data.arrayTurn) if self.player_turn == 1 else self.player2.Play(
             column, self.board, self.player_turn, self.is_valid_move(),self.player_data.arrayTurn)

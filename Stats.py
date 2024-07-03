@@ -16,7 +16,7 @@ class Puissance4CSV:
         print("Initialisation des données")
         # #TEST IF FILE EXIST
         try:
-            self._dfCSV = pd.read_csv(self._fileDF, sep=';')
+            self._dfCSV = pd.read_csv(self._fileDF, low_memory=False ,sep=';')
         except FileNotFoundError:
             os.makedirs("./Data/")
             open(self._fileDF, 'w').close()
@@ -52,7 +52,7 @@ class Puissance4CSV:
     def Sauvegarder(self, winner):
         df = pd.DataFrame()
         try:
-            df = pd.read_csv(self._fileDF, sep=';')
+            df = pd.read_csv(self._fileDF, low_memory=False ,sep=';')
             numberOfLastGame = int(df.columns[-2][6:]) # get penultimate column name and extract the number
         except pd.errors.EmptyDataError:
             numberOfLastGame = 0
@@ -85,7 +85,7 @@ class Puissance4CSV:
         dfOldGame = pd.DataFrame()
 
         try:
-            dfOldGame = pd.read_csv(self._fileDF, sep=';', index_col=0, header=[0, 1])
+            dfOldGame = pd.read_csv(self._fileDF,low_memory=False ,sep=';', index_col=0, header=[0, 1])
         except pd.errors.EmptyDataError:
             print("Pas de data dans csv dfOldGame!")
 
@@ -103,7 +103,7 @@ class Puissance4CSV:
 
     def charger(self):
         try:
-            self._dfCSV = pd.read_csv(self._fileDF, sep=';')
+            self._dfCSV = pd.read_csv(self._fileDF,low_memory=False , sep=';')
             return self._dfCSV
         except FileNotFoundError:
             print("Fichier non trouvé. Un nouveau fichier sera créé.")
