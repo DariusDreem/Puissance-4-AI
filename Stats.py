@@ -26,6 +26,7 @@ class Puissance4CSV:
 
     def AjouterLigne(self, coord):
         nouvelle_paire = np.array([[coord[0], coord[1]]])
+        print("Nouvelle paire : ", nouvelle_paire)
         if self.arrayTurn is None:
             self.arrayTurn = nouvelle_paire
         else:
@@ -57,15 +58,20 @@ class Puissance4CSV:
         except pd.errors.EmptyDataError:
             numberOfLastGame = 0
 
+        print("self arrayTurn : ", self.arrayTurn)
+
         p1Turn = np.array([self.arrayTurn[0]])
-        p2Turn = np.array([self.arrayTurn[1]])
+        p2Turn = np.array([self.arrayTurn[1]]) if len(self.arrayTurn) > 1 else np.array([])
 
         for i in range(len(self.arrayTurn) - 2):
             row = self.arrayTurn[i + 2]
-            if (i+2) % 2 == 0:
+            if (i + 2) % 2 == 0:
                 p1Turn = np.vstack([p1Turn, row])
             else:
-                p2Turn = np.vstack([p2Turn, row])
+                if p2Turn.size == 0:
+                    p2Turn = np.array([row])
+                else:
+                    p2Turn = np.vstack([p2Turn, row])
 
         if winner == 1:
             scoreP1 = np.array(self.generate_geometric_parts(p1Turn.shape[0], 1))
@@ -80,15 +86,12 @@ class Puissance4CSV:
 
         self._CreateGameDF(numberOfLastGame + 1, winner)
 
-        # print(self._dfCSV)
-
         dfOldGame = pd.DataFrame()
 
         try:
-            dfOldGame = pd.read_csv(self._fileDF,low_memory=False ,sep=';', index_col=0, header=[0, 1])
+            dfOldGame = pd.read_csv(self._fileDF, low_memory=False, sep=';', index_col=0, header=[0, 1])
         except pd.errors.EmptyDataError:
             print("Pas de data dans csv dfOldGame!")
-
 
         print(self._dfCSV)
         print("========")
