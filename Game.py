@@ -212,63 +212,49 @@ class Game:
     def play(self, root):
         self.IsFinished = False  # Initialiser la variable avec la casse correcte
         root.mainloop()  # Now the game will run on GUI and He update only the GUI
-
-    def analyze_first_moves():
-        games = [Game() for _ in range(1000)]
-        first_moves = [game.first_move for game in games]
-        
-        # Compter la fréquence de chaque premier coup
-        move_counts = Counter(first_moves)
-        
-        # Trier les coups par fréquence décroissante
-        sorted_moves = sorted(move_counts.items(), key=lambda x: x[1], reverse=True)
-        
-        # Séparer les coups et les comptages pour le graphique
-        moves, counts = zip(*sorted_moves)
-        
-        # Créer le graphique
-        plt.figure(figsize=(12, 6))
-        plt.bar(moves, counts)
-        
-        # Personnaliser le graphique
-        plt.title("Fréquence des premiers coups")
-        plt.xlabel("Premier coup")
-        plt.ylabel("Nombre de parties")
-        plt.xticks(rotation=45, ha='right')
-        
-        # Ajuster la mise en page
-        plt.tight_layout()
-        
-        # Afficher le graphique
-        plt.show()
-        
         
     def analyze_first_moves(self):
-        if not self.games_data is None or self.games_data.empty:
-            return None
+        if self.games_data is None or self.games_data.empty:
+            if os.path.exists(self.csv_file):
+                self.games_data = pd.read_csv(self.csv_file, sep=';')
+                print(self.games_data)
+            else:
+                print(f"Le fichier {self.csv_file} n'existe pas. Le bot fonctionnera sans les données des parties précédentes.")
+                return None
+
+        print("Analyzing first moves...")
 
         # Initialiser un dictionnaire pour stocker le nombre de premiers coups dans chaque colonne
         first_moves = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
 
-        # Parcourir toutes les parties dans le CSV
-        for i in range(0, len(self.games_data.columns) - 1, 2):
-            if i + 1 >= len(self.games_data.columns):
-                break  # Sortir de la boucle si on a atteint la fin des colonnes
+        # Parcourir toutes les colonnes de jeu dans le CSV
+        for col in self.games_data.columns:
+            if col.startswith('Game'):  # Assurez-vous que c'est bien le préfixe utilisé pour les colonnes de jeu
+                game_column = self.games_data[col]
+                
+                # Obtenir le premier coup (en ignorant la première ligne qui contient "Winner")
+                first_move = game_column.dropna().iloc[1] if len(game_column.dropna()) > 1 else None
+                
+                if first_move is not None:
+                    try:
+                        if isinstance(first_move, str):
+                            move = int(first_move.split(',')[1])
+                        elif isinstance(first_move, (int, float)):
+                            move = int(first_move)
+                        else:
+                            continue  # Ignorer les types inattendus
 
-            game_column = self.games_data.iloc[:, i]
-            
-            # Obtenir le premier coup (en ignorant la première ligne qui contient "Winner")
-            first_move = game_column.dropna().tolist()[1]
-            
-            try:
-                col = int(first_move.split(',')[1])
-                if 0 <= col <= 6:  # S'assurer que la colonne est dans la plage valide
-                    first_moves[col] += 1
-            except (ValueError, IndexError):
-                continue  # Ignorer les coups invalides
+                        if 0 <= move <= 6:  # S'assurer que la colonne est dans la plage valide
+                            first_moves[move] += 1
+                    except (ValueError, IndexError):
+                        continue  # Ignorer les coups invalides
 
         # Calculer le pourcentage de premiers coups pour chaque colonne
         total_games = sum(first_moves.values())
+        if total_games == 0:
+            print("Aucune donnée valide trouvée.")
+            return None
+
         first_move_percentages = {col: (count / total_games) * 100 for col, count in first_moves.items()}
 
         # Créer un graphique à barres
@@ -286,3 +272,9 @@ class Game:
             plt.text(col, percentage, f'{percentage:.1f}%', ha='center', va='bottom')
 
         plt.show()
+
+        # Trouver la colonne la plus jouée en premier
+        most_played_column = max(first_moves, key=first_moves.get)
+        print(f"Colonne la plus jouée en premier : {most_played_column}")
+
+        return most_played_column
