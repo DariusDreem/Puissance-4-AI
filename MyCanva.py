@@ -79,6 +79,7 @@ class MyCanvas(tk.Canvas):
 
     def Show_Stats(self):
         self.clear()
+        self.master.game.analyze_first_moves()
         print("Show Stats Here ^^")
 
 

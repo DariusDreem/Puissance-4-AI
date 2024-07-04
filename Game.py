@@ -2,6 +2,7 @@ import GameType
 import Bot as Bot
 import Player as Player
 import os
+import numpy as np #type: ignore 
 import matplotlib.pyplot as plt #type: ignore
 import pandas as pd #type: ignore
 from collections import Counter
@@ -242,5 +243,45 @@ class Game:
         plt.show()
         
         
-    # def Get_Stats():
-        
+    def analyze_first_moves(self):
+        if not self.games_data is None or self.games_data.empty:
+            return None
+
+        # Initialiser un dictionnaire pour stocker le nombre de premiers coups dans chaque colonne
+        first_moves = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+
+        # Parcourir toutes les parties dans le CSV
+        for i in range(0, len(self.games_data.columns) - 1, 2):
+            if i + 1 >= len(self.games_data.columns):
+                break  # Sortir de la boucle si on a atteint la fin des colonnes
+
+            game_column = self.games_data.iloc[:, i]
+            
+            # Obtenir le premier coup (en ignorant la première ligne qui contient "Winner")
+            first_move = game_column.dropna().tolist()[1]
+            
+            try:
+                col = int(first_move.split(',')[1])
+                if 0 <= col <= 6:  # S'assurer que la colonne est dans la plage valide
+                    first_moves[col] += 1
+            except (ValueError, IndexError):
+                continue  # Ignorer les coups invalides
+
+        # Calculer le pourcentage de premiers coups pour chaque colonne
+        total_games = sum(first_moves.values())
+        first_move_percentages = {col: (count / total_games) * 100 for col, count in first_moves.items()}
+
+        # Créer un graphique à barres
+        plt.figure(figsize=(10, 6))
+        plt.bar(first_move_percentages.keys(), first_move_percentages.values())
+        plt.title("Répartition des premiers coups")
+        plt.xlabel("Colonne")
+        plt.ylabel("Pourcentage de premiers coups")
+        plt.xticks(range(7))
+        plt.ylim(0, 100)
+
+        # Ajouter les pourcentages au-dessus de chaque barre
+        for col, percentage in first_move_percentages.items():
+            plt.text(col, percentage, f'{percentage:.1f}%', ha='center', va='bottom')
+
+        plt.show()
