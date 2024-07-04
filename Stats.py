@@ -15,6 +15,7 @@ class Puissance4CSV:
         
         try:
             # Lecture du fichier CSV s'il existe
+           if os.path.getsize(self._fileDF) > 0:
             self._dfCSV = pd.read_csv(self._fileDF, low_memory=False, sep=';')
         except FileNotFoundError:
             # Création du répertoire et du fichier CSV s'ils n'existent pas

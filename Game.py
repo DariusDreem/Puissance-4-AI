@@ -35,8 +35,10 @@ class Game:
         self.player_data = Puissance4CSV()
         if os.path.exists(self.csv_file):
             print("File exist")
-
-            self.games_data = pd.read_csv(self.csv_file, sep=';', low_memory=False,index_col= 0)
+            if os.path.getsize(self.csv_file) > 0:
+                
+                self.games_data = pd.read_csv(self.csv_file, sep=';', low_memory=False,index_col= 0)
+                
             
             print(self.games_data)
             print("File loaded")
