@@ -163,7 +163,7 @@ class Game:
                 self.make_move(column)
                 self.check_win()
                 self.check_draw()
-                self.master.after(100, self.master.update())
+                # self.master.after(100, self.master.update())
 
               
         column = self.player1.Play(column, self.board, self.player_turn,

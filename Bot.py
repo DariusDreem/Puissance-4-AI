@@ -53,12 +53,16 @@ class Bot:
                 best_score = column_scores[col]
                 best_col = col
 
+        Red = '\033[91m'
+        Green = '\033[92m'
+        Reset = '\033[0m'
         if best_col is None or best_score <= 0:
-            print(f"Bot didn't find any good move\nBest column: {best_col}\nBest score: {best_score}")
-            print(f"Column scores: {column_scores}\nColumn counts: {column_counts}\nValid columns: {self.valid_col}")
+            print(f"{Red}Bot didn't find any good move\nBest column: {best_col}\nBest score: {best_score} {Reset}")
+            print(f"{Red}Column scores: {column_scores}\nColumn counts: {column_counts}\nValid columns: {self.valid_col} {Reset}")
             return None
         
-        print(f"Bot played column {best_col} with a score of {best_score}")
+        print(f"{Green}Column scores: {column_scores}\nColumn counts: {column_counts}\nValid columns: {self.valid_col}{Reset}")
+        print(f"{Green}Bot played column {best_col} with a score of {best_score}{Reset}")
 
         return best_col
     
