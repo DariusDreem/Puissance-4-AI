@@ -1,9 +1,9 @@
 import GameType
 import Bot as Bot
 import Player as Player
-
-import matplotlib.pyplot as plt
-
+import os
+import matplotlib.pyplot as plt #type: ignore
+import pandas as pd #type: ignore
 from collections import Counter
 import random
 
@@ -20,7 +20,7 @@ class Game:
     actuel_player = 1 if player_turn == 1 else 2
     board = [[0 for _ in range(7)] for _ in range(6)]
     player_data = None
-
+    csv_file = None
 
     def __new__(cls, args=None):
         if cls._instance is None:
@@ -28,7 +28,17 @@ class Game:
         return cls._instance
 
     def __init__(self, gameType=None):
+        self.csv_file = "./Data/data.csv"
         self.player_data = Puissance4CSV()
+        self.games_data = None
+        if os.path.exists(self.csv_file):
+            self.games_data = pd.read_csv(self.csv_file, sep= ';')
+            print(self.games_data)
+            # self.is_csv_file = True
+        else:
+            # self.is_csv_file = False
+            print(f"Le fichier {self.csv_file} n'existe pas. Le bot fonctionnera sans les données des parties précédentes.")
+
 
         if gameType is not None:
             print("Set Game Type : ", gameType)
@@ -136,14 +146,14 @@ class Game:
         randomint = random.randint(0, 1)
         if randomint == 0:
             self.player1 = Player.Player()
-            self.player2 = Bot.Bot()
+            self.player2 = Bot.Bot(self.games_data)
         else:
-            self.player1 = Bot.Bot()
+            self.player1 = Bot.Bot(self.games_data)
             self.player2 = Player.Player()
     
     def SetPlayerCVC(self):
-        self.player1 = Bot.Bot()
-        self.player2 = Bot.Bot()
+        self.player1 = Bot.Bot(self.games_data)
+        self.player2 = Bot.Bot(self.games_data)
         print("Set Player CVC")
 
 
@@ -230,3 +240,7 @@ class Game:
         
         # Afficher le graphique
         plt.show()
+        
+        
+    # def Get_Stats():
+        
