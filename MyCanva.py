@@ -78,7 +78,7 @@ class MyCanvas(tk.Canvas):
         self.master.game.playTurn(-1)
 
     def Show_Stats(self):
-        self.clear()
+        # self.clear()
         self.master.game.analyze_first_moves()
         print("Show Stats Here ^^")
 
@@ -105,7 +105,6 @@ class MyCanvas(tk.Canvas):
         self.update_draw_board()
 
     def handle_click(self, event):
-        # print("Column : ", event.x // self.cell_size)
         if self.clickDeosntWork or self.master.game.gameType is GameType.GameType.CVC:
             self.master.game.playTurn(event.x // self.cell_size)
         else :
