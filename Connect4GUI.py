@@ -113,10 +113,8 @@ class Connect4GUI(MyTk):
             self.show_restart_button()
 
     def restart_game(self):
-        print("Restarting game")
 
         if self.menu is None:
-            print("Merde !")
             return
 
         self.menu.openFrame()

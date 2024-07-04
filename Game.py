@@ -22,6 +22,7 @@ class Game:
     board = [[0 for _ in range(7)] for _ in range(6)]
     player_data = None
     csv_file = None
+    games_data = None   # Variable de classe pour stocker les données des parties
 
     def __new__(cls, args=None):
         if cls._instance is None:
@@ -32,16 +33,13 @@ class Game:
         self.master = myTk
         self.csv_file = "./Data/data.csv"
         self.player_data = Puissance4CSV()
-        self.games_data = None
         if os.path.exists(self.csv_file):
-            self.games_data = pd.read_csv(self.csv_file, sep=';', index_col= 0)
-            print(self.games_data)
-            # self.is_csv_file = True
-        else:
-            # self.is_csv_file = False
-            print(
-                f"Le fichier {self.csv_file} n'existe pas. Le bot fonctionnera sans les données des parties précédentes.")
+            print("File exist")
 
+            self.games_data = pd.read_csv(self.csv_file, sep=';', low_memory=False,index_col= 0)
+            
+            print(self.games_data)
+            print("File loaded")
         if not hasattr(self,
                        'initialized'):  # Vérifiez si l'instance a déjà été initialisée
             self.player_turn = 1
@@ -56,12 +54,6 @@ class Game:
         self.IsFinished = False
         self.player_turn = 1
 
-    def print_board(self):
-        print("\n")
-        for row in self.board:
-            print(" ".join(str(cell) for cell in row))
-        print("\n")
-
     def is_valid_move(self):
         valid_moves = []
         for column in range(7):
@@ -70,9 +62,6 @@ class Game:
         return valid_moves
 
     def finishLoadGui(self):
-        print("Finish Load Gui")
-        print("Game Type : ", self.gameType)
-        print("Player turn : ", GameType.GameType.CVC)
         if GameType.GameType.CVC == self.gameType:
             self.playTurn(-1, False)
 
@@ -90,10 +79,6 @@ class Game:
                 self.player_data.AjouterLigne([i, column])
                 break
             i += 1
-        print("Player turn : ", self.gameType)
-        if GameType.GameType.CVC == self.gameType:
-            print("Bot turn !!!")
-            #Loop for the bot to play
 
     def check_win(self):
         winner = 0
@@ -135,7 +120,6 @@ class Game:
 
     def check_draw(self):
         if all(cell != 0 for row in self.board for cell in row):
-            print("It's a draw!")
             self.IsFinished = True
 
     def SetPlayerPVC(self):
@@ -150,9 +134,11 @@ class Game:
     def SetPlayerCVC(self):
         self.player1 = Bot.Bot(self.games_data)
         self.player2 = Bot.Bot(self.games_data)
-        print("Set Player CVC")
 
     def playTurn(self, column=0, playerClick=True):
+        if self.gameType == GameType.GameType.PVP:
+            self.player1 = Player.Player()
+            self.player2 = Player.Player()
         if (self.gameType == GameType.GameType.PVC and type(
                 self.player1) is not Bot.Bot):
             if (type(self.player2) is not Bot.Bot):
@@ -164,12 +150,8 @@ class Game:
                 self.player2) is not Bot.Bot):
             self.SetPlayerCVC()
 
-        print(self.gameType)
-        print('arrayturn :', self.player_data.arrayTurn)
-        if self.gameType == GameType.GameType.CVC:
-            print("CVC condition")
+        if self.gameType == GameType.GameType.CVC:    
             while not self.IsFinished:
-                print("while entered")
 
                 column = self.player1.Play(column, self.board, self.player_turn,
                                            self.is_valid_move(),
@@ -179,20 +161,9 @@ class Game:
                 self.make_move(column)
                 self.check_win()
                 self.check_draw()
-                self.master.after(80, self.master.update())
-                # elif GameType.GameType.PVC == self.gameType:
+                self.master.after(100, self.master.update())
 
-                #     if (self.player_turn == 1):
-                #         self.PlayerPlay(column)
-                #     else:
-                #         self.BotPlay()
-                # elif GameType.GameType.CVC == self.gameType:
-                #     self.BotPlay()
-
-                print("player 1 ")
-                print(type(self.player1))
-                print("player 2 ")
-                print(type(self.player2))
+              
         column = self.player1.Play(column, self.board, self.player_turn,
                                    self.is_valid_move(),
                                    self.player_data.arrayTurn) if self.player_turn == 1 else self.player2.Play(
@@ -202,14 +173,9 @@ class Game:
         self.check_win()
         self.check_draw()
 
-    def BotPlay(self):
-        bot = Bot.Bot()
-        column = bot.Play(self.board, self.player_turn, self.is_valid_move())
-        self.make_move(column)
-
     def PlayerPlay(self, column):
         if column not in self.is_valid_move():
-            print("Invalid move. Try again.")
+          
             return
         self.make_move(column)
 
@@ -249,9 +215,6 @@ class Game:
     #
     def analyze_first_moves(self):
 
-        print(not self.games_data is None)
-        print(self.games_data.empty)
-
         if self.games_data is None or self.games_data.empty:
             return None
 
@@ -272,12 +235,10 @@ class Game:
                     first_moves[col] += 1
             except (ValueError, IndexError):
                 continue  # Ignorer les coups invalides
-        print(first_moves)
         # Calculer le pourcentage de premiers coups pour chaque colonne
         total_games = sum(first_moves.values())
         first_move_percentages = {col: (count / total_games) * 100 for
                                   col, count in first_moves.items()}
-        print(first_move_percentages)
         # Créer un graphique à barres
         plt.figure(figsize=(10, 6))
         plt.bar(first_move_percentages.keys(), first_move_percentages.values())

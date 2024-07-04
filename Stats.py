@@ -13,20 +13,15 @@ class Puissance4CSV:
 
     def __init__(self):
         # Initialisation des données
-        print("Initialisation des données")
         # #TEST IF FILE EXIST
         try:
             self._dfCSV = pd.read_csv(self._fileDF, low_memory=False ,sep=';')
         except FileNotFoundError:
             os.makedirs("./Data/")
             open(self._fileDF, 'w').close()
-            print("Fichier non trouvé. Un nouveau fichier sera créé.")
-            
-            print("Pas de data dans csv dfOldGame!")
 
     def AjouterLigne(self, coord):
         nouvelle_paire = np.array([[coord[0], coord[1]]])
-        print("Nouvelle paire : ", nouvelle_paire)
         if self.arrayTurn is None:
             self.arrayTurn = nouvelle_paire
         else:
@@ -57,8 +52,6 @@ class Puissance4CSV:
             numberOfLastGame = int(df.columns[-2][6:]) # get penultimate column name and extract the number
         except pd.errors.EmptyDataError:
             numberOfLastGame = 0
-
-        print("self arrayTurn : ", self.arrayTurn)
 
         p1Turn = np.array([self.arrayTurn[0]])
         p2Turn = np.array([self.arrayTurn[1]]) if len(self.arrayTurn) > 1 else np.array([])
@@ -93,11 +86,7 @@ class Puissance4CSV:
         except pd.errors.EmptyDataError:
             print("Pas de data dans csv dfOldGame!")
 
-        print(self._dfCSV)
-        print("========")
-        print(dfOldGame)
         df_combined = pd.concat([dfOldGame, self._dfCSV], axis=1)
-        print(df_combined)
         df_combined.to_csv(self._fileDF, sep=';')
         self.arrayTurn = None
 

@@ -31,7 +31,6 @@ class MyCanvas(tk.Canvas):
         self.board = [[0] * self.cols for _ in range(self.rows)]
         self.player = 1
         self.show_menu()
-        print("MyCanvas init : ", self.master.game)
 
     def show_menu(self):
         self.clear()
@@ -51,20 +50,17 @@ class MyCanvas(tk.Canvas):
     def start_game_pvp(self):
         self.clear()
         self.master.game.gameType = GameType.GameType.PVP
-        print("Game Type : ", self.master.game.gameType)
         self.setup_game()
 
     def start_game_pve(self):
         self.clear()
         self.master.game.gameType = GameType.GameType.PVC
-        print("Game Type : ", self.master.game.gameType)
         self.setup_game()
         self.master.game.SetPlayerPVC()
 
     def start_game_ia(self):
         self.clear()
         self.master.game.gameType = GameType.GameType.CVC
-        print("Game Type : ", self.master.game.gameType)
         self.setup_game()
         self.master.game.SetPlayerCVC()
 
@@ -72,7 +68,6 @@ class MyCanvas(tk.Canvas):
         self.clear()
         self.trainningIA = True
         self.master.game.gameType = GameType.GameType.CVC
-        print("Game Type : ", self.master.game.gameType)
         self.setup_game()
         self.master.game.SetPlayerCVC()
         self.master.game.playTurn(-1)
@@ -80,7 +75,6 @@ class MyCanvas(tk.Canvas):
     def Show_Stats(self):
         # self.clear()
         self.master.game.analyze_first_moves()
-        print("Show Stats Here ^^")
 
 
     def back_to_menu(self):
@@ -108,7 +102,6 @@ class MyCanvas(tk.Canvas):
         if self.clickDeosntWork or self.master.game.gameType is GameType.GameType.CVC:
             self.master.game.playTurn(event.x // self.cell_size)
         else :
-            print("Click doesn't work")
             self.clickDeosntWork = True
 
 
@@ -146,9 +139,7 @@ class MyCanvas(tk.Canvas):
             self.buttonRestart = tk.Button(self.root, text="Restart Game", command=self.restart_game)
             self.buttonRestart.pack()
 
-            print("self.trainningIA : ", self.trainningIA)
             if self.trainningIA:
-                print("Training IA : New game")
                 self.buttonRestart.pack_forget()
                 self.master.game.ResetBoardGame()
                 self.Start_training_ia()
