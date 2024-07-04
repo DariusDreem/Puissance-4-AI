@@ -7,6 +7,7 @@ class Bot:
     is_csv_file = False
     csv_file = None
     games_data = None
+    valid_col = None
     
     def __init__(self, game_data=None):
         self.csv_file = "./Data/data.csv"
@@ -52,15 +53,16 @@ class Bot:
         print(f"Best column: {best_col} with score {column_scores[best_col]}")
         for col in column_scores:
             best_score = 0
-            if best_score > column_scores[col]:
+            if best_score > column_scores[col] and col in self.valid_col:
                 best_score = column_scores[col]
                 best_move = col
             else: 
                 continue
             best_col = best_move
+
+        print(f"Best column: {best_col} with score {column_scores[best_col]}")    
             
-            
-        if best_col is None or best_score == 0:
+        if best_col is None or best_score == 0 or best_score < 0:
             return None
         return best_col
     
@@ -74,7 +76,6 @@ class Bot:
     def Play(self, column, board, player_turn, columns_list, current_game):
         print("Bot turn !!!")
         self.get_valid_col(columns_list)
-
         # Vérifier s'il y a un coup gagnant pour le bot
         for col in range(7):
             if self.is_valid_move(col):
@@ -96,7 +97,11 @@ class Bot:
         print("Bot Should Learn")
         best_move = self.learn_from_games(current_game)
         print("Best Move : ", best_move)
-        return best_move if best_move is not None else random.randint(0, 6)
+        if best_move is not None :
+            return best_move
+        else :
+            self.get_valid_col(columns_list)
+            return columns_list[random.randint(0, len(columns_list) - 1)] 
 
     # @staticmethod
     def simulate_move(self, board, col, player):

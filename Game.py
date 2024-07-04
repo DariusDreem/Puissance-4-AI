@@ -28,7 +28,8 @@ class Game:
             cls._instance = super(Game, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, gameType=None):
+    def __init__(self, myTk=None):
+        self.master = myTk
         self.csv_file = "./Data/data.csv"
         self.player_data = Puissance4CSV()
         self.games_data = None
@@ -40,10 +41,6 @@ class Game:
             # self.is_csv_file = False
             print(
                 f"Le fichier {self.csv_file} n'existe pas. Le bot fonctionnera sans les données des parties précédentes.")
-
-        if gameType is not None:
-            print("Set Game Type : ", gameType)
-            self.GameType = GameType.GameType(gameType)
 
         if not hasattr(self,
                        'initialized'):  # Vérifiez si l'instance a déjà été initialisée
@@ -182,6 +179,7 @@ class Game:
                 self.make_move(column)
                 self.check_win()
                 self.check_draw()
+                self.master.after(50, self.master.update())
                 # elif GameType.GameType.PVC == self.gameType:
 
                 #     if (self.player_turn == 1):
