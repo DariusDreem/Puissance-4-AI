@@ -1,55 +1,73 @@
 import pandas as pd #type: ignore
+import numpy as np #type: ignore
 import os
 import random
 
 class Bot:
     is_csv_file = False
     csv_file = None
+    
     def __init__(self):
         self.csv_file = "./Data/data.csv"
         self.games_data = None
         if os.path.exists(self.csv_file):
-            self.games_data = pd.read_csv(self.csv_file, engine="python")
+            self.games_data = pd.read_csv(self.csv_file, sep= ';')
+            print(self.games_data)
             self.is_csv_file = True
         else:
             self.is_csv_file = False
             print(f"Le fichier {self.csv_file} n'existe pas. Le bot fonctionnera sans les données des parties précédentes.")
 
     def learn_from_games(self, current_game):
-        if not self.is_csv_file or self.games_data is None:
+        if not self.is_csv_file or self.games_data is None or self.games_data.empty or current_game is None:
             return None
 
-        # Convertir current_game en une chaîne pour la comparaison
-        current_game_str = ','.join([f"{move[0]},{move[1]}" for move in current_game])
-
-        # Initialiser un dictionnaire pour stocker les scores moyens de chaque colonne
+        # Initialize a dictionary to store the average scores of each column
         column_scores = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
         column_counts = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
 
-        # Parcourir toutes les parties dans le CSV
-        for i in range(0, len(self.games_data.columns), 2):
+        # Iterate through all games in the CSV
+        for i in range(0, len(self.games_data.columns) - 1, 2):
+            if i + 1 >= len(self.games_data.columns):
+                break  # Exit the loop if we've reached the end of columns
+
             game_column = self.games_data.iloc[:, i]
             score_column = self.games_data.iloc[:, i+1]
             
-            # Vérifier si la partie correspond à la partie actuelle
-            game_moves = game_column.dropna().tolist()[1:]  # Ignorer la première ligne (Winner)
-            game_str = ','.join(game_moves)
+            # Check if the game matches the current game
+            game_moves = game_column.dropna().tolist()[1:]  # Ignore the first row (Winner)
             
-            if game_str.startswith(current_game_str):
-                # Si la partie correspond, calculer le score pour chaque colonne
+            if len(game_moves) >= len(current_game) and np.array_equal(current_game, game_moves[:len(current_game)]):
+                # If the game matches, calculate the score for each column
                 for move, score in zip(game_moves[len(current_game):], score_column.dropna().tolist()[len(current_game):]):
-                    col = int(move.split(',')[1])
-                    column_scores[col] += float(score)
-                    column_counts[col] += 1
+                    try:
+                        col = int(move.split(',')[1])
+                        if 0 <= col <= 6:  # Ensure the column is within valid range
+                            column_scores[col] += float(score)
+                            column_counts[col] += 1
+                    except (ValueError, IndexError):
+                        continue  # Skip invalid moves
 
-        # Calculer la moyenne des scores pour chaque colonne
+        # Calculate the average score for each column
         for col in column_scores:
             if column_counts[col] > 0:
                 column_scores[col] /= column_counts[col]
 
-        # Trouver la colonne avec le meilleur score moyen
+        # Find the column with the best average score
         best_col = max(column_scores, key=column_scores.get)
-        
+        print(f"Best column: {best_col} with score {column_scores[best_col]}")
+        for col in column_scores:
+            best_score = 0
+            if best_score > column_scores[col]:
+                best_score = column_scores[col]
+                best_move = col
+            else: 
+                continue
+            best_col = best_move
+            
+            
+        if best_col is None or best_score == 0:
+            return None
         return best_col
     
     def get_valid_col(self, columns_list):
@@ -82,8 +100,8 @@ class Bot:
 
         ## Si ni check_win ni check_block ne renvoient de coup, on regarde l'historique
         print("Bot Should Learn")
-        best_move = float(self.learn_from_games(current_game))
-
+        best_move = self.learn_from_games(current_game)
+        print("Best Move : ", best_move)
         return best_move if best_move is not None else random.randint(0, 6)
 
     # @staticmethod

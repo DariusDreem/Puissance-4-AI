@@ -157,10 +157,12 @@ class Game:
             self.SetPlayerCVC()
 
         print(self.gameType)
+        print('arrayturn :', self.player_data.arrayTurn)
         if self.gameType == GameType.GameType.CVC:
             print("CVC condition")
             while not self.IsFinished:
                 print("while entered")
+                
                 column = self.player1.Play(column, self.board, self.player_turn,self.is_valid_move(),self.player_data.arrayTurn) if self.player_turn == 1 else self.player2.Play(column, self.board, self.player_turn, self.is_valid_move(),self.player_data.arrayTurn)
                 self.make_move(column)
                 self.check_win()
