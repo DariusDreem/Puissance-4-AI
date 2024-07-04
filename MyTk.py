@@ -6,8 +6,6 @@ from MyCanva import MyCanvas
 
 
 class MyTk(tk.Tk):
-    bite = 31
-
     def __init__(self):
         super().__init__()
         self.title("Menu")

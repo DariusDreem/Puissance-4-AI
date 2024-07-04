@@ -179,7 +179,7 @@ class Game:
                 self.make_move(column)
                 self.check_win()
                 self.check_draw()
-                self.master.after(50, self.master.update())
+                self.master.after(80, self.master.update())
                 # elif GameType.GameType.PVC == self.gameType:
 
                 #     if (self.player_turn == 1):
