@@ -278,8 +278,9 @@ class Game:
         plt.xlabel("Colonne")
         plt.ylabel("Pourcentage de premiers coups")
         plt.xticks(range(7))
+        plt.xlim(-0.5, 6.5)
         plt.ylim(0, 100)
-
+        
         # Ajouter les pourcentages au-dessus de chaque barre
         for col, percentage in first_move_percentages.items():
             plt.text(col, percentage, f'{percentage:.1f}%', ha='center', va='bottom')
